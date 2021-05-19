@@ -98,7 +98,7 @@ public class ParallelOkPerfNew {
             // 五、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 六、生成用户
-            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
+            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
             parallelOkDemo.userAdd(BigInteger.valueOf(total), BigInteger.valueOf(tps));
             // 七、开启并行
             parallelOk.enableParallel();
