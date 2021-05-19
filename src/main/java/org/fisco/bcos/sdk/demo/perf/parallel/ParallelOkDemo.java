@@ -305,7 +305,7 @@ public class ParallelOkDemo {
                     collector.getTotal());
         }
         //        veryTransferData(qps);
-        System.exit(0);
+        //        System.exit(0);
     }
 
     public void getBalanceResult(BigInteger qps) throws InterruptedException {
