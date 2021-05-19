@@ -179,7 +179,7 @@ public class ParallelOkDemo {
         }
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
         dagUserInfo.writeDagTransferUser();
-        System.exit(0);
+//        System.exit(0);
     }
 
     public void queryAccount(BigInteger qps) throws InterruptedException {
