@@ -75,10 +75,12 @@ public class DagUserInfo {
         int mid = userList.size() / 2;
         return userList.get((idx + mid) % userList.size());
     }
+
     public DagTransferUser getUser(int idx) {
         assert !isEmpty() : "Has no user.";
         return userList.get(idx);
     }
+
     public DagTransferUser getNext(int idx) {
         return userList.get((idx + 1) % userList.size());
     }

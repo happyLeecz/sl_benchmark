@@ -21,15 +21,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.checkerframework.checker.units.qual.A;
-import org.fisco.bcos.sdk.abi.datatypes.Int;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
 import org.fisco.bcos.sdk.demo.perf.callback.ParallelOkCallback;
 import org.fisco.bcos.sdk.demo.perf.collector.PerformanceCollector;
 import org.fisco.bcos.sdk.demo.perf.model.DagTransferUser;
 import org.fisco.bcos.sdk.demo.perf.model.DagUserInfo;
-import org.fisco.bcos.sdk.demo.util.Generator;
 import org.fisco.bcos.sdk.model.TransactionReceipt;
 import org.fisco.bcos.sdk.transaction.model.exception.ContractException;
 import org.fisco.bcos.sdk.utils.ThreadPoolService;
@@ -236,64 +232,68 @@ public class ParallelOkDemo {
         collector.setTotal(count.intValue());
         AtomicInteger sendFailed = new AtomicInteger(0);
         for (Integer i = 0; i < transactions.length; i++) {
-           for(Integer j = 0; j < transactions[i].length; j++) {
-               limiter.acquire();
-               final int fromUserIndex = transactions[i][j][0];
-               final int toUserIndex = transactions[i][j][1];
-               threadPoolService
-                       .getThreadPool()
-                       .execute(
-                               new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       try {
-                                           Random random = new Random();
-                                           int r = random.nextInt(100);
-                                           BigInteger amount = BigInteger.valueOf(r);
+            for (Integer j = 0; j < transactions[i].length; j++) {
+                limiter.acquire();
+                final int fromUserIndex = transactions[i][j][0];
+                final int toUserIndex = transactions[i][j][1];
+                threadPoolService
+                        .getThreadPool()
+                        .execute(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Random random = new Random();
+                                            int r = random.nextInt(100);
+                                            BigInteger amount = BigInteger.valueOf(r);
 
-                                           ParallelOkCallback callback =
-                                                   new ParallelOkCallback(
-                                                           collector,
-                                                           dagUserInfo,
-                                                           ParallelOkCallback.TRANS_CALLBACK);
-                                           callback.setTimeout(0);
-                                           DagTransferUser from = dagUserInfo.getUser(fromUserIndex);
-                                           DagTransferUser to = dagUserInfo.getUser(toUserIndex);
+                                            ParallelOkCallback callback =
+                                                    new ParallelOkCallback(
+                                                            collector,
+                                                            dagUserInfo,
+                                                            ParallelOkCallback.TRANS_CALLBACK);
+                                            callback.setTimeout(0);
+                                            DagTransferUser from =
+                                                    dagUserInfo.getUser(fromUserIndex);
+                                            DagTransferUser to = dagUserInfo.getUser(toUserIndex);
 
-                                           callback.setFromUser(from);
-                                           callback.setToUser(to);
-                                           callback.setAmount(amount);
-                                           callback.recordStartTime();
-                                           parallelOk.transfer(
-                                                   from.getUser(), to.getUser(), amount, callback);
-                                           int current = sended.incrementAndGet();
-                                           if (current >= division && ((current % division) == 0)) {
-                                               long elapsed = System.currentTimeMillis() - startTime;
-                                               double sendSpeed = current / ((double) elapsed / 1000);
-                                               System.out.println(
-                                                       "Already sent: "
-                                                               + current
-                                                               + "/"
-                                                               + count
-                                                               + " transactions"
-                                                               + ",QPS="
-                                                               + sendSpeed);
-                                           }
-                                       } catch (Exception e) {
-                                           logger.error(
-                                                   "call transfer failed, error info: {}",
-                                                   e.getMessage());
-                                           TransactionReceipt receipt = new TransactionReceipt();
-                                           receipt.setStatus("-1");
-                                           receipt.setMessage(
-                                                   "call transfer failed, error info: "
-                                                           + e.getMessage());
-                                           collector.onMessage(receipt, Long.valueOf(0));
-                                           sendFailed.incrementAndGet();
-                                       }
-                                   }
-                               });
-           }
+                                            callback.setFromUser(from);
+                                            callback.setToUser(to);
+                                            callback.setAmount(amount);
+                                            callback.recordStartTime();
+                                            parallelOk.transfer(
+                                                    from.getUser(), to.getUser(), amount, callback);
+                                            int current = sended.incrementAndGet();
+                                            if (current >= division
+                                                    && ((current % division) == 0)) {
+                                                long elapsed =
+                                                        System.currentTimeMillis() - startTime;
+                                                double sendSpeed =
+                                                        current / ((double) elapsed / 1000);
+                                                System.out.println(
+                                                        "Already sent: "
+                                                                + current
+                                                                + "/"
+                                                                + count
+                                                                + " transactions"
+                                                                + ",QPS="
+                                                                + sendSpeed);
+                                            }
+                                        } catch (Exception e) {
+                                            logger.error(
+                                                    "call transfer failed, error info: {}",
+                                                    e.getMessage());
+                                            TransactionReceipt receipt = new TransactionReceipt();
+                                            receipt.setStatus("-1");
+                                            receipt.setMessage(
+                                                    "call transfer failed, error info: "
+                                                            + e.getMessage());
+                                            collector.onMessage(receipt, Long.valueOf(0));
+                                            sendFailed.incrementAndGet();
+                                        }
+                                    }
+                                });
+            }
         }
 
         while (collector.getReceived().intValue() != count.intValue()) {
@@ -304,7 +304,7 @@ public class ParallelOkDemo {
                     collector.getReceived().intValue(),
                     collector.getTotal());
         }
-//        veryTransferData(qps);
+        //        veryTransferData(qps);
         System.exit(0);
     }
 
@@ -338,7 +338,7 @@ public class ParallelOkDemo {
                             });
         }
 
-        while(getBalanceFailed.intValue() + getBalanceSuccess.intValue() < userSize) {
+        while (getBalanceFailed.intValue() + getBalanceSuccess.intValue() < userSize) {
             Thread.sleep(400);
         }
         System.out.println("get balance:");

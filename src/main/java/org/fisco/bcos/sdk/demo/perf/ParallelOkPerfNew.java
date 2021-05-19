@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.fisco.bcos.sdk.BcosSDK;
 import org.fisco.bcos.sdk.client.Client;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
@@ -37,7 +36,8 @@ public class ParallelOkPerfNew {
     public static void Usage() {
         System.out.println(" Usage:");
         System.out.println("=========== test ===========");
-        System.out.println("\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerf [groupID] [total] [tps] [conflictRate] [groups] [tps].");
+        System.out.println(
+                "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerf [groupID] [total] [tps] [conflictRate] [groups] [tps].");
     }
     // [groupID] [total] [conflictRate] [groups] [tps]
     public static void main(String[] args)
@@ -69,7 +69,8 @@ public class ParallelOkPerfNew {
 
             // ******************************************************
             // 一、生成交易测试用例
-            int[][][] tansactions = Generator.generateTransactionTestCases(total, conflictRate, groups);
+            int[][][] tansactions =
+                    Generator.generateTransactionTestCases(total, conflictRate, groups);
             ParallelOk parallelOk;
             ParallelOkDemo parallelOkDemo;
             // 二、部署合约
@@ -88,7 +89,8 @@ public class ParallelOkPerfNew {
                     "====== ParallelOk trans, load success, address: "
                             + parallelOk.getContractAddress());
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
-            parallelOkDemo.userTransfer(BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
+            parallelOkDemo.userTransfer(
+                    BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
             // 获取交易之后的每个用户的余额数据
             parallelOkDemo.getBalanceResult(BigInteger.valueOf(tps));
 
@@ -111,7 +113,8 @@ public class ParallelOkPerfNew {
                     "====== ParallelOk trans, load success, address: "
                             + parallelOk.getContractAddress());
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
-            parallelOkDemo.userTransfer(BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
+            parallelOkDemo.userTransfer(
+                    BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
             // 获取交易之后的每个用户的余额数据
             parallelOkDemo.getBalanceResult(BigInteger.valueOf(tps));
 
@@ -133,30 +136,40 @@ public class ParallelOkPerfNew {
         AtomicInteger notSameCount = new AtomicInteger(0);
         assert serialDaglUserInfoSize == parallelDagUserInfoSize : "user size is not the same";
         int size = serialDaglUserInfoSize;
-        for(int i = 0; i < size; i ++) {
+        for (int i = 0; i < size; i++) {
             final int userIndex = i;
-            threadPoolService.getThreadPool().execute(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            BigInteger serialBalance = serialDagUserInfo.getUserList().get(userIndex).getAmount();
-                            BigInteger parallelBalance = parallelDagUserInfo.getUserList().get(userIndex).getAmount();
-                            if(serialBalance.compareTo(parallelBalance) != 0) {
-                                notSameCount.incrementAndGet();
-                            }else{
-                                sameCount.incrementAndGet();
-                            }
-                        }
-                    }
-            );
+            threadPoolService
+                    .getThreadPool()
+                    .execute(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    BigInteger serialBalance =
+                                            serialDagUserInfo
+                                                    .getUserList()
+                                                    .get(userIndex)
+                                                    .getAmount();
+                                    BigInteger parallelBalance =
+                                            parallelDagUserInfo
+                                                    .getUserList()
+                                                    .get(userIndex)
+                                                    .getAmount();
+                                    if (serialBalance.compareTo(parallelBalance) != 0) {
+                                        notSameCount.incrementAndGet();
+                                    } else {
+                                        sameCount.incrementAndGet();
+                                    }
+                                }
+                            });
         }
-        while(sameCount.intValue() + notSameCount.intValue() < size) {
+        while (sameCount.intValue() + notSameCount.intValue() < size) {
             Thread.sleep(1000);
         }
 
         System.out.println("verify:");
         System.out.println("\ttotal transactions count is " + size);
         System.out.println("\tcorrect transactions count in parallel is " + sameCount.intValue());
-        System.out.println("\tincorrect transactions count in parallel is " + notSameCount.intValue());
+        System.out.println(
+                "\tincorrect transactions count in parallel is " + notSameCount.intValue());
     }
 }
