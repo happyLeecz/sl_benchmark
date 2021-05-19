@@ -44,7 +44,7 @@ public class ParallelOkPerfNew {
             throws ContractException, IOException, InterruptedException {
         try {
             String configFileName = ConstantConfig.CONFIG_FILE_NAME;
-            URL configUrl = ParallelOkPerf.class.getClassLoader().getResource(configFileName);
+            URL configUrl = ParallelOkPerfNew.class.getClassLoader().getResource(configFileName);
             if (configUrl == null) {
                 System.out.println("The configFile " + configFileName + " doesn't exist!");
                 return;
