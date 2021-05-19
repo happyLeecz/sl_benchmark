@@ -309,6 +309,7 @@ public class ParallelOkDemo {
     }
 
     public void getBalanceResult(BigInteger qps) throws InterruptedException {
+        System.out.println("get balance Result ==========================");
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
         AtomicInteger getBalanceFailed = new AtomicInteger(0);
         AtomicInteger getBalanceSuccess = new AtomicInteger(0);
