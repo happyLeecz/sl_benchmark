@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
@@ -315,8 +316,8 @@ public class ParallelOkDemo {
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
         AtomicInteger getBalanceFailed = new AtomicInteger(0);
         AtomicInteger getBalanceSuccess = new AtomicInteger(0);
-        final List<DagTransferUser> userInfo = dagUserInfo.getUserList();
-        int userSize = userInfo.size();
+        final Map<Integer, DagTransferUser> userMap = dagUserInfo.getUserMap();
+        int userSize = userMap.size();
         for (int i = 0; i < userSize; i++) {
             rateLimiter.acquire();
             final int userIndex = i;
@@ -327,7 +328,7 @@ public class ParallelOkDemo {
                                 @Override
                                 public void run() {
                                     try {
-                                        DagTransferUser user = userInfo.get(userIndex);
+                                        DagTransferUser user = userMap.get(userIndex);
                                         BigInteger balance = parallelOk.balanceOf(user.getUser());
                                         user.setAmount(balance);
                                         getBalanceSuccess.incrementAndGet();

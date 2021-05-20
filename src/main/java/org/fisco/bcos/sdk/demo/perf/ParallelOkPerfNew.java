@@ -29,8 +29,8 @@ import org.fisco.bcos.sdk.utils.ThreadPoolService;
 
 public class ParallelOkPerfNew {
     private static Client client;
-    private static DagUserInfo serialDagUserInfo = new DagUserInfo(Generator.getGi());
-    private static DagUserInfo parallelDagUserInfo = new DagUserInfo(Generator.getGi());
+    private static DagUserInfo serialDagUserInfo = new DagUserInfo();
+    private static DagUserInfo parallelDagUserInfo = new DagUserInfo();
     private static ThreadPoolService threadPoolService;
 
     public static void Usage() {
@@ -131,8 +131,8 @@ public class ParallelOkPerfNew {
     }
 
     public static void verify() throws InterruptedException {
-        int serialDaglUserInfoSize = serialDagUserInfo.getUserList().size();
-        int parallelDagUserInfoSize = parallelDagUserInfo.getUserList().size();
+        int serialDaglUserInfoSize = serialDagUserInfo.getUserMap().size();
+        int parallelDagUserInfoSize = parallelDagUserInfo.getUserMap().size();
         AtomicInteger sameCount = new AtomicInteger(0);
         AtomicInteger notSameCount = new AtomicInteger(0);
         assert serialDaglUserInfoSize == parallelDagUserInfoSize : "user size is not the same";
@@ -147,12 +147,12 @@ public class ParallelOkPerfNew {
                                 public void run() {
                                     BigInteger serialBalance =
                                             serialDagUserInfo
-                                                    .getUserList()
+                                                    .getUserMap()
                                                     .get(userIndex)
                                                     .getAmount();
                                     BigInteger parallelBalance =
                                             parallelDagUserInfo
-                                                    .getUserList()
+                                                    .getUserMap()
                                                     .get(userIndex)
                                                     .getAmount();
                                     if (serialBalance.compareTo(parallelBalance) != 0) {

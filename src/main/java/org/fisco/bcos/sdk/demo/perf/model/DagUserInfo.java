@@ -19,23 +19,25 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DagUserInfo {
     private static Logger logger = LoggerFactory.getLogger(DagUserInfo.class);
 
-    private List<DagTransferUser> userList = null;
+    private List<DagTransferUser> userList = new ArrayList<>();
+
+    public Map<Integer, DagTransferUser> getUserMap() {
+        return userMap;
+    }
+
+    private Map<Integer, DagTransferUser> userMap = new TreeMap<>();
 
     private String file = null;
 
     private String parallelokAddr = "";
-
-    public DagUserInfo(Integer initialSize) {
-        this.userList = new ArrayList<DagTransferUser>(initialSize);
-    }
 
     public void setContractAddr(String addr) {
         this.parallelokAddr = addr;
@@ -62,7 +64,7 @@ public class DagUserInfo {
     }
 
     public synchronized void addUser(Integer index, DagTransferUser user) {
-        userList.add(index, user);
+        userMap.put(index, user);
     }
 
     public synchronized void addUser(DagTransferUser user) {
@@ -86,7 +88,7 @@ public class DagUserInfo {
 
     public DagTransferUser getUser(int idx) {
         assert !isEmpty() : "Has no user.";
-        return userList.get(idx);
+        return userMap.get(idx);
     }
 
     public DagTransferUser getNext(int idx) {
