@@ -36,12 +36,17 @@ public class ParallelOkCallback extends TransactionCallback {
     private DagTransferUser fromUser = null;
     private DagTransferUser toUser = null;
     private BigInteger amount = null;
+    private Integer index;
 
     public ParallelOkCallback(
-            PerformanceCollector collector, DagUserInfo dagUserInfo, String callbackType) {
+            PerformanceCollector collector,
+            DagUserInfo dagUserInfo,
+            String callbackType,
+            Integer index) {
         this.collector = collector;
         this.dagUserInfo = dagUserInfo;
         this.callbackType = callbackType;
+        this.index = index;
     }
 
     public void recordStartTime() {
@@ -54,7 +59,7 @@ public class ParallelOkCallback extends TransactionCallback {
         try {
             if (receipt.isStatusOK()) {
                 if (callbackType.compareTo(ADD_USER_CALLBACK) == 0) { // add test
-                    dagUserInfo.addUser(user);
+                    dagUserInfo.addUser(index, user);
                 } else if (callbackType.compareTo(TRANS_CALLBACK) == 0) { // transfer test
                     fromUser.decrease(amount);
                     toUser.increase(amount);

@@ -29,8 +29,8 @@ import org.fisco.bcos.sdk.utils.ThreadPoolService;
 
 public class ParallelOkPerfNew {
     private static Client client;
-    private static DagUserInfo serialDagUserInfo = new DagUserInfo();
-    private static DagUserInfo parallelDagUserInfo = new DagUserInfo();
+    private static DagUserInfo serialDagUserInfo = new DagUserInfo(Generator.getGi());
+    private static DagUserInfo parallelDagUserInfo = new DagUserInfo(Generator.getGi());
     private static ThreadPoolService threadPoolService;
 
     public static void Usage() {

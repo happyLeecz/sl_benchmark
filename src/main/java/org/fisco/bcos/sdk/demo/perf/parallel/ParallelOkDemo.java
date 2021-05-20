@@ -135,7 +135,8 @@ public class ParallelOkDemo {
                                             new ParallelOkCallback(
                                                     collector,
                                                     dagUserInfo,
-                                                    ParallelOkCallback.ADD_USER_CALLBACK);
+                                                    ParallelOkCallback.ADD_USER_CALLBACK,
+                                                    index);
                                     callback.setTimeout(0);
                                     callback.setUser(dtu);
                                     try {
