@@ -252,7 +252,8 @@ public class ParallelOkDemo {
                                                     new ParallelOkCallback(
                                                             collector,
                                                             dagUserInfo,
-                                                            ParallelOkCallback.TRANS_CALLBACK);
+                                                            ParallelOkCallback.TRANS_CALLBACK,
+                                                            null);
                                             callback.setTimeout(0);
                                             DagTransferUser from =
                                                     dagUserInfo.getUser(fromUserIndex);
