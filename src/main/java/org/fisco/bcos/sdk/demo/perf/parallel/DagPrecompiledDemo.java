@@ -85,7 +85,8 @@ public class DagPrecompiledDemo {
                                             new ParallelOkCallback(
                                                     collector,
                                                     dagUserInfo,
-                                                    ParallelOkCallback.ADD_USER_CALLBACK);
+                                                    ParallelOkCallback.ADD_USER_CALLBACK,
+                                                    index);
                                     callback.setUser(dtu);
                                     try {
                                         callback.recordStartTime();
@@ -201,7 +202,8 @@ public class DagPrecompiledDemo {
                                             new ParallelOkCallback(
                                                     collector,
                                                     dagUserInfo,
-                                                    ParallelOkCallback.TRANS_CALLBACK);
+                                                    ParallelOkCallback.TRANS_CALLBACK,
+                                                    null);
                                     try {
                                         DagTransferUser from = dagUserInfo.getFrom(index);
                                         DagTransferUser to = dagUserInfo.getTo(index);
