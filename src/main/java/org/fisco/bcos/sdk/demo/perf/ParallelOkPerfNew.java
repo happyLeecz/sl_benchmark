@@ -77,7 +77,7 @@ public class ParallelOkPerfNew {
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
-            parallelOkDemo.userAdd(BigInteger.valueOf(total), BigInteger.valueOf(tps));
+            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(tps));
             // 四、串行
             serialDagUserInfo.loadDagTransferUser();
             parallelOk =
@@ -99,7 +99,7 @@ public class ParallelOkPerfNew {
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 六、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
-            parallelOkDemo.userAdd(BigInteger.valueOf(total), BigInteger.valueOf(tps));
+            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(tps));
             // 七、开启并行
             parallelOk.enableParallel();
             // 八、并行

@@ -3,7 +3,11 @@ package org.fisco.bcos.sdk.demo.util;
 import java.util.Arrays;
 
 public class Generator {
-    static int gi = 0;
+    public static int getGi() {
+        return gi;
+    }
+
+    private static int gi = 0;
     /**
      * 生成交易测试用例，包括冲突交易和非冲突交易
      *
