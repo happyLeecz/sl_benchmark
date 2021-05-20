@@ -27,11 +27,16 @@ import org.slf4j.LoggerFactory;
 public class DagUserInfo {
     private static Logger logger = LoggerFactory.getLogger(DagUserInfo.class);
 
+    private Integer index = null;
     private List<DagTransferUser> userList = new ArrayList<DagTransferUser>();
 
     private String file = null;
 
     private String parallelokAddr = "";
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 
     public void setContractAddr(String addr) {
         this.parallelokAddr = addr;
@@ -58,7 +63,7 @@ public class DagUserInfo {
     }
 
     public synchronized void addUser(DagTransferUser user) {
-        userList.add(user);
+        userList.add(index, user);
     }
 
     public boolean isEmpty() {

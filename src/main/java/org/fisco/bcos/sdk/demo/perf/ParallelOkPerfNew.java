@@ -77,6 +77,7 @@ public class ParallelOkPerfNew {
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
+            System.out.println("the real user number is " + Generator.getGi());
             parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(tps));
             // 四、串行
             serialDagUserInfo.loadDagTransferUser();
