@@ -146,16 +146,15 @@ public class ParallelOkPerfNew {
                                 @Override
                                 public void run() {
                                     BigInteger serialBalance =
-                                            serialDagUserInfo
-                                                    .getUser(userIndex)
-                                                    .getAmount();
+                                            serialDagUserInfo.getUser(userIndex).getAmount();
                                     BigInteger parallelBalance =
-                                            parallelDagUserInfo
-                                                    .getUser(userIndex)
-                                                    .getAmount();
+                                            parallelDagUserInfo.getUser(userIndex).getAmount();
                                     System.out.println("============== i is " + userIndex);
-                                    System.out.println("\tserial user amount is " + serialBalance.intValue());
-                                    System.out.println("\tparallel user amount is " + serialBalance.intValue());
+                                    System.out.println(
+                                            "\tserial user amount is " + serialBalance.intValue());
+                                    System.out.println(
+                                            "\tparallel user amount is "
+                                                    + serialBalance.intValue());
                                     if (serialBalance.compareTo(parallelBalance) != 0) {
                                         notSameCount.incrementAndGet();
                                     } else {
