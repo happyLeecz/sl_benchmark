@@ -85,13 +85,17 @@ public class DagUserInfo {
         return userList.get((idx + mid) % userList.size());
     }
 
-    public DagTransferUser getUser(int idx) {
+    public DagTransferUser getDTU(int idx) {
         assert !isEmpty() : "Has no user.";
         return userMap.get(idx);
     }
 
     public DagTransferUser getNext(int idx) {
         return userList.get((idx + 1) % userList.size());
+    }
+
+    public int size() {
+        return userMap.size();
     }
 
     public void writeDagTransferUser() throws IOException {

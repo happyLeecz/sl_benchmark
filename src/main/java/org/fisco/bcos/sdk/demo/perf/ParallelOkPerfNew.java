@@ -39,7 +39,7 @@ public class ParallelOkPerfNew {
         System.out.println(
                 "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew [groupID] [total] [conflictRate] [groups] [qps].");
     }
-    // [groupID] [total] [conflictRate] [groups] [qps]
+
     public static void main(String[] args)
             throws ContractException, IOException, InterruptedException {
         try {
@@ -82,7 +82,7 @@ public class ParallelOkPerfNew {
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
             // 四、串行
-            serialDagUserInfo.loadDagTransferUser();
+            //            serialDagUserInfo.loadDagTransferUser();
             parallelOk =
                     ParallelOk.load(
                             serialDagUserInfo.getContractAddr(),
@@ -95,7 +95,7 @@ public class ParallelOkPerfNew {
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
-            parallelOkDemo.getBalanceResult(BigInteger.valueOf(qps));
+            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
 
             // ******************************************************
             // 五、部署合约
@@ -120,7 +120,7 @@ public class ParallelOkPerfNew {
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
-            parallelOkDemo.getBalanceResult(BigInteger.valueOf(qps));
+            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
 
             // ******************************************************
             // 九、正确性比对
@@ -149,15 +149,9 @@ public class ParallelOkPerfNew {
                                 @Override
                                 public void run() {
                                     BigInteger serialBalance =
-                                            serialDagUserInfo.getUser(userIndex).getAmount();
+                                            serialDagUserInfo.getDTU(userIndex).getAmount();
                                     BigInteger parallelBalance =
-                                            parallelDagUserInfo.getUser(userIndex).getAmount();
-                                    System.out.println("============== i is " + userIndex);
-                                    System.out.println(
-                                            "\tserial user amount is " + serialBalance.intValue());
-                                    System.out.println(
-                                            "\tparallel user amount is "
-                                                    + parallelBalance.intValue());
+                                            parallelDagUserInfo.getDTU(userIndex).getAmount();
                                     if (serialBalance.compareTo(parallelBalance) != 0) {
                                         notSameCount.incrementAndGet();
                                     } else {
@@ -167,14 +161,15 @@ public class ParallelOkPerfNew {
                             });
         }
         while (sameCount.intValue() + notSameCount.intValue() < size) {
-            System.out.println("waiting for job to complete...");
             Thread.sleep(400);
         }
 
         System.out.println("verify:");
-        System.out.println("\ttotal transactions count is " + size);
-        System.out.println("\tcorrect transactions count in parallel is " + sameCount.intValue());
+        System.out.println("\tthe number of user accounts is " + size);
         System.out.println(
-                "\tincorrect transactions count in parallel is " + notSameCount.intValue());
+                "\tthe number of correct user accounts in parallel is " + sameCount.intValue());
+        System.out.println(
+                "\tthe number of incorrect user accounts in parallel is "
+                        + notSameCount.intValue());
     }
 }

@@ -19,7 +19,6 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
 import org.fisco.bcos.sdk.demo.perf.callback.ParallelOkCallback;
@@ -179,47 +178,48 @@ public class ParallelOkDemo {
             Thread.sleep(100);
         }
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
-        dagUserInfo.writeDagTransferUser();
+        //        dagUserInfo.writeDagTransferUser();
         //        System.exit(0);
     }
 
-    public void queryAccount(BigInteger qps) throws InterruptedException {
-        final List<DagTransferUser> allUsers = dagUserInfo.getUserList();
-        RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
-        AtomicInteger sent = new AtomicInteger(0);
-        for (Integer i = 0; i < allUsers.size(); i++) {
-            final Integer index = i;
-            rateLimiter.acquire();
-            threadPoolService
-                    .getThreadPool()
-                    .execute(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        BigInteger result =
-                                                parallelOk.balanceOf(allUsers.get(index).getUser());
-                                        allUsers.get(index).setAmount(result);
-                                        int all = sent.incrementAndGet();
-                                        if (all >= allUsers.size()) {
-                                            System.out.println(
-                                                    dateFormat.format(new Date())
-                                                            + " Query account finished");
-                                        }
-                                    } catch (ContractException exception) {
-                                        logger.warn(
-                                                "queryAccount for {} failed, error info: {}",
-                                                allUsers.get(index).getUser(),
-                                                exception.getMessage());
-                                        System.exit(0);
-                                    }
-                                }
-                            });
-        }
-        while (sent.get() < allUsers.size()) {
-            Thread.sleep(50);
-        }
-    }
+    //    public void queryAccount(BigInteger qps) throws InterruptedException {
+    //        final List<DagTransferUser> allUsers = dagUserInfo.getUserList();
+    //        RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
+    //        AtomicInteger sent = new AtomicInteger(0);
+    //        for (Integer i = 0; i < allUsers.size(); i++) {
+    //            final Integer index = i;
+    //            rateLimiter.acquire();
+    //            threadPoolService
+    //                    .getThreadPool()
+    //                    .execute(
+    //                            new Runnable() {
+    //                                @Override
+    //                                public void run() {
+    //                                    try {
+    //                                        BigInteger result =
+    //
+    // parallelOk.balanceOf(allUsers.get(index).getUser());
+    //                                        allUsers.get(index).setAmount(result);
+    //                                        int all = sent.incrementAndGet();
+    //                                        if (all >= allUsers.size()) {
+    //                                            System.out.println(
+    //                                                    dateFormat.format(new Date())
+    //                                                            + " Query account finished");
+    //                                        }
+    //                                    } catch (ContractException exception) {
+    //                                        logger.warn(
+    //                                                "queryAccount for {} failed, error info: {}",
+    //                                                allUsers.get(index).getUser(),
+    //                                                exception.getMessage());
+    //                                        System.exit(0);
+    //                                    }
+    //                                }
+    //                            });
+    //        }
+    //        while (sent.get() < allUsers.size()) {
+    //            Thread.sleep(50);
+    //        }
+    //    }
 
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
@@ -258,8 +258,8 @@ public class ParallelOkDemo {
                                                             null);
                                             callback.setTimeout(0);
                                             DagTransferUser from =
-                                                    dagUserInfo.getUser(fromUserIndex);
-                                            DagTransferUser to = dagUserInfo.getUser(toUserIndex);
+                                                    dagUserInfo.getDTU(fromUserIndex);
+                                            DagTransferUser to = dagUserInfo.getDTU(toUserIndex);
 
                                             callback.setFromUser(from);
                                             callback.setToUser(to);
@@ -312,13 +312,11 @@ public class ParallelOkDemo {
         //        System.exit(0);
     }
 
-    public void getBalanceResult(BigInteger qps) throws InterruptedException {
-        System.out.println("get balance Result ==========================");
+    public void queryAccount(BigInteger qps) throws InterruptedException {
+        System.out.println("query account ==========================");
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
-        AtomicInteger getBalanceFailed = new AtomicInteger(0);
-        AtomicInteger getBalanceSuccess = new AtomicInteger(0);
-        final Map<Integer, DagTransferUser> userMap = dagUserInfo.getUserMap();
-        int userSize = userMap.size();
+        AtomicInteger querySuccess = new AtomicInteger(0);
+        int userSize = dagUserInfo.size();
         for (int i = 0; i < userSize; i++) {
             rateLimiter.acquire();
             final int userIndex = i;
@@ -329,26 +327,28 @@ public class ParallelOkDemo {
                                 @Override
                                 public void run() {
                                     try {
-                                        DagTransferUser user = userMap.get(userIndex);
+                                        DagTransferUser user = dagUserInfo.getDTU(userIndex);
                                         BigInteger balance = parallelOk.balanceOf(user.getUser());
                                         user.setAmount(balance);
-                                        getBalanceSuccess.incrementAndGet();
+                                        int all = querySuccess.incrementAndGet();
+                                        if (all >= userSize) {
+                                            System.out.println(
+                                                    dateFormat.format(new Date())
+                                                            + " query account finished");
+                                        }
                                     } catch (ContractException exception) {
-                                        getBalanceFailed.incrementAndGet();
-                                        logger.error(
-                                                "get remote balance failed, error info: "
-                                                        + exception.getMessage());
+                                        logger.warn(
+                                                "queryAccount for {} failed, error info: {}",
+                                                dagUserInfo.getDTU(userIndex).getUser(),
+                                                exception.getMessage());
+                                        System.exit(0);
                                     }
                                 }
                             });
         }
 
-        while (getBalanceFailed.intValue() + getBalanceSuccess.intValue() < userSize) {
-            Thread.sleep(400);
+        while (querySuccess.intValue() < userSize) {
+            Thread.sleep(50);
         }
-        System.out.println("get balance:");
-        System.out.println(" \tuser count is " + userSize);
-        System.out.println(" \tsuceess count is " + getBalanceSuccess);
-        System.out.println(" \tfailed count is " + getBalanceFailed);
     }
 }
