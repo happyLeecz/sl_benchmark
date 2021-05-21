@@ -245,9 +245,9 @@ public class ParallelOkDemo {
                                     @Override
                                     public void run() {
                                         try {
-                                            Random random = new Random();
-                                            int r = random.nextInt(100);
-                                            BigInteger amount = BigInteger.valueOf(r);
+//                                            Random random = new Random();
+//                                            int r = random.nextInt(100);
+                                            BigInteger amount = BigInteger.valueOf(10);
 
                                             ParallelOkCallback callback =
                                                     new ParallelOkCallback(
