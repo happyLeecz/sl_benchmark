@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
 import org.fisco.bcos.sdk.demo.perf.callback.ParallelOkCallback;
@@ -245,8 +244,10 @@ public class ParallelOkDemo {
                                     @Override
                                     public void run() {
                                         try {
-//                                            Random random = new Random();
-//                                            int r = random.nextInt(100);
+                                            //                                            Random
+                                            // random = new Random();
+                                            //                                            int r =
+                                            // random.nextInt(100);
                                             BigInteger amount = BigInteger.valueOf(10);
 
                                             ParallelOkCallback callback =
