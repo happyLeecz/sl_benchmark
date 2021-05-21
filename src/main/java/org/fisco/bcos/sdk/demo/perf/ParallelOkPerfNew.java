@@ -37,9 +37,9 @@ public class ParallelOkPerfNew {
         System.out.println(" Usage:");
         System.out.println("=========== test ===========");
         System.out.println(
-                "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerf [groupID] [total] [tps] [conflictRate] [groups] [tps].");
+                "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew [groupID] [total] [conflictRate] [groups] [qps].");
     }
-    // [groupID] [total] [conflictRate] [groups] [tps]
+    // [groupID] [total] [conflictRate] [groups] [qps]
     public static void main(String[] args)
             throws ContractException, IOException, InterruptedException {
         try {
@@ -57,7 +57,7 @@ public class ParallelOkPerfNew {
             Integer total = Integer.valueOf(args[1]);
             Integer conflictRate = Integer.valueOf(args[2]);
             Integer groups = Integer.valueOf(args[3]);
-            Integer tps = Integer.valueOf(args[4]);
+            Integer qps = Integer.valueOf(args[4]);
 
             String configFile = configUrl.getPath();
             BcosSDK sdk = BcosSDK.build(configFile);
@@ -78,7 +78,7 @@ public class ParallelOkPerfNew {
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             System.out.println("the real user number is " + Generator.getGi());
-            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(tps));
+            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps));
             // 四、串行
             serialDagUserInfo.loadDagTransferUser();
             parallelOk =
@@ -91,16 +91,16 @@ public class ParallelOkPerfNew {
                             + parallelOk.getContractAddress());
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
-                    BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
+                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
-            parallelOkDemo.getBalanceResult(BigInteger.valueOf(tps));
+            parallelOkDemo.getBalanceResult(BigInteger.valueOf(qps));
 
             // ******************************************************
             // 五、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 六、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
-            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(tps));
+            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps));
             // 七、开启并行
             parallelOk.enableParallel();
             // 八、并行
@@ -115,9 +115,9 @@ public class ParallelOkPerfNew {
                             + parallelOk.getContractAddress());
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
-                    BigInteger.valueOf(total), BigInteger.valueOf(tps), tansactions);
+                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
-            parallelOkDemo.getBalanceResult(BigInteger.valueOf(tps));
+            parallelOkDemo.getBalanceResult(BigInteger.valueOf(qps));
 
             // ******************************************************
             // 九、正确性比对
