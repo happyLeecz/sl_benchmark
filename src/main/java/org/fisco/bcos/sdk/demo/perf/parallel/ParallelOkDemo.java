@@ -102,13 +102,13 @@ public class ParallelOkDemo {
         System.out.println(" \tverify_failed count is " + verifyFailed);
     }
 
-    public void userAdd(BigInteger userCount, BigInteger qps)
+    public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
         System.out.println("===================================================================");
         System.out.println("Start UserAdd test, count " + userCount);
         RateLimiter limiter = RateLimiter.create(qps.intValue());
 
-        long currentSeconds = System.currentTimeMillis() / 1000L;
+        //        long currentSeconds = System.currentTimeMillis() / 1000L;
         Integer area = userCount.intValue() / 10;
         long startTime = System.currentTimeMillis();
         collector.setTotal(userCount.intValue());

@@ -59,6 +59,7 @@ public class ParallelOkPerfNew {
             Integer groups = Integer.valueOf(args[3]);
             Integer qps = Integer.valueOf(args[4]);
 
+            long currentSeconds = System.currentTimeMillis() / 1000L;
             String configFile = configUrl.getPath();
             BcosSDK sdk = BcosSDK.build(configFile);
             client = sdk.getClient(Integer.valueOf(groupId));
@@ -78,7 +79,8 @@ public class ParallelOkPerfNew {
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             System.out.println("the real user number is " + Generator.getGi());
-            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps));
+            parallelOkDemo.userAdd(
+                    BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
             // 四、串行
             serialDagUserInfo.loadDagTransferUser();
             parallelOk =
@@ -100,7 +102,8 @@ public class ParallelOkPerfNew {
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 六、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
-            parallelOkDemo.userAdd(BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps));
+            parallelOkDemo.userAdd(
+                    BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
             // 七、开启并行
             parallelOk.enableParallel();
             // 八、并行
