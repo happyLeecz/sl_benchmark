@@ -154,7 +154,7 @@ public class ParallelOkPerfNew {
                                             "\tserial user amount is " + serialBalance.intValue());
                                     System.out.println(
                                             "\tparallel user amount is "
-                                                    + serialBalance.intValue());
+                                                    + parallelBalance.intValue());
                                     if (serialBalance.compareTo(parallelBalance) != 0) {
                                         notSameCount.incrementAndGet();
                                     } else {
