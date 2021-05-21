@@ -147,14 +147,15 @@ public class ParallelOkPerfNew {
                                 public void run() {
                                     BigInteger serialBalance =
                                             serialDagUserInfo
-                                                    .getUserMap()
-                                                    .get(userIndex)
+                                                    .getUser(userIndex)
                                                     .getAmount();
                                     BigInteger parallelBalance =
                                             parallelDagUserInfo
-                                                    .getUserMap()
-                                                    .get(userIndex)
+                                                    .getUser(userIndex)
                                                     .getAmount();
+                                    System.out.println("============== i is " + userIndex);
+                                    System.out.println("\tserial user amount is " + serialBalance.intValue());
+                                    System.out.println("\tparallel user amount is " + serialBalance.intValue());
                                     if (serialBalance.compareTo(parallelBalance) != 0) {
                                         notSameCount.incrementAndGet();
                                     } else {
@@ -164,7 +165,8 @@ public class ParallelOkPerfNew {
                             });
         }
         while (sameCount.intValue() + notSameCount.intValue() < size) {
-            Thread.sleep(1000);
+            System.out.println("waiting for job to complete...");
+            Thread.sleep(400);
         }
 
         System.out.println("verify:");
