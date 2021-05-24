@@ -96,7 +96,7 @@ public class ParallelOkPerfNew {
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
-//            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
+            //            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
 
             // ******************************************************
             // 五、部署合约
