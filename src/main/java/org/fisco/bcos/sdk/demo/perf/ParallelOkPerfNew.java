@@ -78,20 +78,20 @@ public class ParallelOkPerfNew {
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
-            System.out.println("the real user number is " + Generator.getGi());
+//            System.out.println("the real user number is " + Generator.getGi());
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
             // 四、串行
             //                        serialDagUserInfo.loadDagTransferUser();
-            parallelOk =
-                    ParallelOk.load(
-                            serialDagUserInfo.getContractAddr(),
-                            client,
-                            client.getCryptoSuite().getCryptoKeyPair());
-            System.out.println(
-                    "====== ParallelOk trans, load success, address: "
-                            + parallelOk.getContractAddress());
-            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
+//            parallelOk =
+//                    ParallelOk.load(
+//                            serialDagUserInfo.getContractAddr(),
+//                            client,
+//                            client.getCryptoSuite().getCryptoKeyPair());
+//            System.out.println(
+//                    "====== ParallelOk trans, load success, address: "
+//                            + parallelOk.getContractAddress());
+//            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
@@ -108,15 +108,15 @@ public class ParallelOkPerfNew {
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
             // 八、并行
             //            parallelDagUserInfo.loadDagTransferUser();
-            parallelOk =
-                    ParallelOk.load(
-                            parallelDagUserInfo.getContractAddr(),
-                            client,
-                            client.getCryptoSuite().getCryptoKeyPair());
-            System.out.println(
-                    "====== ParallelOk trans, load success, address: "
-                            + parallelOk.getContractAddress());
-            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
+//            parallelOk =
+//                    ParallelOk.load(
+//                            parallelDagUserInfo.getContractAddr(),
+//                            client,
+//                            client.getCryptoSuite().getCryptoKeyPair());
+//            System.out.println(
+//                    "====== ParallelOk trans, load success, address: "
+//                            + parallelOk.getContractAddress());
+//            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
