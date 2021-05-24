@@ -229,7 +229,7 @@ public class ParallelOkDemo {
         this.sended = new AtomicInteger(0);
         System.out.println(
                 "==================================================================== Querying account info...");
-        queryAccount(qps);
+        //        queryAccount(qps);
         System.out.println("Sending transfer transactions...");
         RateLimiter limiter = RateLimiter.create(qps.intValue());
         int division = count.intValue() / 10;
