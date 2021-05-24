@@ -100,33 +100,37 @@ public class ParallelOkPerfNew {
 
             // ******************************************************
             // 五、部署合约
-            parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
-            // 六、开启并行
-            parallelOk.enableParallel();
-            // 七、生成用户
-            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
-            parallelOkDemo.userAdd(
-                    BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
-            // 八、并行
-            //            parallelDagUserInfo.loadDagTransferUser();
-            //            parallelOk =
-            //                    ParallelOk.load(
-            //                            parallelDagUserInfo.getContractAddr(),
-            //                            client,
-            //                            client.getCryptoSuite().getCryptoKeyPair());
-            //            System.out.println(
-            //                    "====== ParallelOk trans, load success, address: "
-            //                            + parallelOk.getContractAddress());
+            //            parallelOk = ParallelOk.deploy(client,
+            // client.getCryptoSuite().getCryptoKeyPair());
+            //            // 六、开启并行
+            //            parallelOk.enableParallel();
+            //            // 七、生成用户
             //            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo,
             // threadPoolService);
-            parallelOkDemo.userTransfer(
-                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
-            // 获取交易之后的每个用户的余额数据
-            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
-
-            // ******************************************************
-            // 九、正确性比对
-            verify();
+            //            parallelOkDemo.userAdd(
+            //                    BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps),
+            // currentSeconds);
+            //            // 八、并行
+            //            //            parallelDagUserInfo.loadDagTransferUser();
+            //            //            parallelOk =
+            //            //                    ParallelOk.load(
+            //            //                            parallelDagUserInfo.getContractAddr(),
+            //            //                            client,
+            //            //                            client.getCryptoSuite().getCryptoKeyPair());
+            //            //            System.out.println(
+            //            //                    "====== ParallelOk trans, load success, address: "
+            //            //                            + parallelOk.getContractAddress());
+            //            //            parallelOkDemo = new ParallelOkDemo(parallelOk,
+            // parallelDagUserInfo,
+            //            // threadPoolService);
+            //            parallelOkDemo.userTransfer(
+            //                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
+            //            // 获取交易之后的每个用户的余额数据
+            //            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
+            //
+            //            // ******************************************************
+            //            // 九、正确性比对
+            //            verify();
             // 十、性能评估
 
         } catch (Exception e) {
