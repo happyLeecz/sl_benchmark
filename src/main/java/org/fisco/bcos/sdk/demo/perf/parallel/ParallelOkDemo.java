@@ -104,7 +104,6 @@ public class ParallelOkDemo {
 
     public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
-        this.sended = new AtomicInteger(0);
         System.out.println("===================================================================");
         System.out.println("Start UserAdd test, count " + userCount);
         RateLimiter limiter = RateLimiter.create(qps.intValue());
@@ -225,7 +224,6 @@ public class ParallelOkDemo {
 
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
-        this.sended = new AtomicInteger(0);
         System.out.println("Querying account info...");
         queryAccount(qps);
         System.out.println("Sending transfer transactions...");
