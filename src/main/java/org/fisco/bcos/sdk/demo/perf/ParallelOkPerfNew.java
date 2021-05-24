@@ -101,12 +101,12 @@ public class ParallelOkPerfNew {
             // ******************************************************
             // 五、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
-            // 六、生成用户
+            // 六、开启并行
+            parallelOk.enableParallel();
+            // 七、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
-            // 七、开启并行
-            parallelOk.enableParallel();
             // 八、并行
             //            parallelDagUserInfo.loadDagTransferUser();
             //            parallelOk =
