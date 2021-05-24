@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class ParallelOkDemo {
     private static final Logger logger = LoggerFactory.getLogger(ParallelOkDemo.class);
-    private static AtomicInteger sended = new AtomicInteger(0);
+    private AtomicInteger sended;
     private AtomicInteger getted = new AtomicInteger(0);
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,6 +44,7 @@ public class ParallelOkDemo {
 
     public ParallelOkDemo(
             ParallelOk parallelOk, DagUserInfo dagUserInfo, ThreadPoolService threadPoolService) {
+        this.sended = new AtomicInteger(0);
         this.threadPoolService = threadPoolService;
         this.parallelOk = parallelOk;
         this.dagUserInfo = dagUserInfo;
@@ -103,6 +104,7 @@ public class ParallelOkDemo {
 
     public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
+        this.sended = new AtomicInteger(0);
         System.out.println("===================================================================");
         System.out.println("Start UserAdd test, count " + userCount);
         RateLimiter limiter = RateLimiter.create(qps.intValue());
@@ -223,6 +225,7 @@ public class ParallelOkDemo {
 
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
+        this.sended = new AtomicInteger(0);
         System.out.println("Querying account info...");
         queryAccount(qps);
         System.out.println("Sending transfer transactions...");

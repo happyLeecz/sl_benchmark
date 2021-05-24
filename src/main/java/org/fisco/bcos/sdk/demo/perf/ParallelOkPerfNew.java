@@ -93,7 +93,6 @@ public class ParallelOkPerfNew {
             //                            + parallelOk.getContractAddress());
             //            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo,
             // threadPoolService);
-            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
@@ -120,7 +119,6 @@ public class ParallelOkPerfNew {
             //                            + parallelOk.getContractAddress());
             //            parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo,
             // threadPoolService);
-            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             // 获取交易之后的每个用户的余额数据
