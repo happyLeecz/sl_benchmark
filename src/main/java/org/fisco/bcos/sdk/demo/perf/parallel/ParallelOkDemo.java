@@ -20,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.checkerframework.checker.units.qual.A;
 import org.fisco.bcos.sdk.demo.contract.ParallelOk;
 import org.fisco.bcos.sdk.demo.perf.callback.ParallelOkCallback;
 import org.fisco.bcos.sdk.demo.perf.collector.PerformanceCollector;
@@ -107,7 +105,8 @@ public class ParallelOkDemo {
     public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
         this.sended = new AtomicInteger(0);
-        System.out.println("==================================================================== add users");
+        System.out.println(
+                "==================================================================== add users");
         System.out.println("Start UserAdd test, count " + userCount);
         RateLimiter limiter = RateLimiter.create(qps.intValue());
 
@@ -228,7 +227,8 @@ public class ParallelOkDemo {
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
         this.sended = new AtomicInteger(0);
-        System.out.println("==================================================================== Querying account info...");
+        System.out.println(
+                "==================================================================== Querying account info...");
         queryAccount(qps);
         System.out.println("Sending transfer transactions...");
         RateLimiter limiter = RateLimiter.create(qps.intValue());
@@ -337,8 +337,8 @@ public class ParallelOkDemo {
                                         int all = querySuccess.incrementAndGet();
                                         if (all >= userSize) {
                                             System.out.println(
-                                                    "==================================================================== " +
-                                                    dateFormat.format(new Date())
+                                                    "==================================================================== "
+                                                            + dateFormat.format(new Date())
                                                             + " query account finished");
                                         }
                                     } catch (ContractException exception) {
