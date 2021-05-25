@@ -37,7 +37,7 @@ public class Generator {
      */
     private static void generateConflictTransactionTestCases(
             int total, Integer conflictRate, Integer groups, int[][][] transactions) {
-        int totalOfConflict = total * conflictRate / 10;
+        int totalOfConflict = total * conflictRate / 100;
         // 计算每组的平均冲突交易数量，向上取整
         int conflictTransactionsPerGroup = (int) Math.ceil((double) totalOfConflict / groups);
         // 最后一个组需要移除的多余的冲突交易数，当不需要移除的时候就是 0
