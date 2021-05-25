@@ -20,7 +20,7 @@ public class Generator {
      * @param groups 分组数，只针对冲突的测试用例，默认为 1
      */
     public static int[][][] generateTransactionTestCases(
-            int total, Integer conflictRate, Integer groups) {
+            int total, Integer conflictRate, Integer groups) throws IOException {
         gi = 0;
         conflictRate = conflictRate == null ? 0 : conflictRate;
         if (conflictRate == 0) {
