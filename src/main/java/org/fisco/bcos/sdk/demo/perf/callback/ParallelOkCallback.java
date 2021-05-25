@@ -110,6 +110,11 @@ public class ParallelOkCallback extends TransactionCallback {
         return user;
     }
 
+    /**
+     * 设置用户
+     *
+     * @param user
+     */
     public void setUser(DagTransferUser user) {
         this.user = user;
     }

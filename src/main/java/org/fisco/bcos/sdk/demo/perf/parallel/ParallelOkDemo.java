@@ -162,9 +162,14 @@ public class ParallelOkDemo {
                                     // 设置账户余额
                                     BigInteger amount = new BigInteger("1000000000");
 
+                                    // 当前用户
                                     DagTransferUser dtu = new DagTransferUser();
+                                    // 用户地址
                                     dtu.setUser(user);
+                                    // 用户余额
                                     dtu.setAmount(amount);
+
+                                    // 设置回调
                                     ParallelOkCallback callback =
                                             new ParallelOkCallback(
                                                     collector,
@@ -175,7 +180,7 @@ public class ParallelOkDemo {
                                     callback.setUser(dtu);
 
                                     try {
-
+                                        // 记录开始发送的时间
                                         callback.recordStartTime();
                                         // 发送交易
                                         parallelOk.set(user, amount, callback);
@@ -262,6 +267,15 @@ public class ParallelOkDemo {
     //        }
     //    }
 
+    /**
+     * 转账
+     *
+     * @param count
+     * @param qps
+     * @param transactions
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
         AtomicInteger sended = new AtomicInteger(0);
@@ -310,6 +324,7 @@ public class ParallelOkDemo {
                                             callback.setFromUser(from);
                                             callback.setToUser(to);
                                             callback.setAmount(amount);
+                                            // 记录开始发送的时间
                                             callback.recordStartTime();
                                             parallelOk.transfer(
                                                     from.getUser(), to.getUser(), amount, callback);

@@ -102,19 +102,18 @@ public class ParallelOkPerfNew {
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
 
             // 四、串行
-            //                        serialDagUserInfo.loadDagTransferUser();
-            //            parallelOk =
-            //                    ParallelOk.load(
-            //                            serialDagUserInfo.getContractAddr(),
-            //                            client,
-            //                            client.getCryptoSuite().getCryptoKeyPair());
-            //            System.out.println(
-            //                    "====== ParallelOk trans, load success, address: "
-            //                            + parallelOk.getContractAddress());
-            //            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo,
-            // threadPoolService);
-            //            parallelOkDemo.userTransfer(
-            //                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
+            serialDagUserInfo.loadDagTransferUser();
+            parallelOk =
+                    ParallelOk.load(
+                            serialDagUserInfo.getContractAddr(),
+                            client,
+                            client.getCryptoSuite().getCryptoKeyPair());
+            System.out.println(
+                    "====== ParallelOk trans, load success, address: "
+                            + parallelOk.getContractAddress());
+            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
+            parallelOkDemo.userTransfer(
+                    BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             //            // 获取交易之后的每个用户的余额数据
             //            parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
             //

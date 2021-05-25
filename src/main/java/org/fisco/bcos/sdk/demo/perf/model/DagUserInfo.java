@@ -38,6 +38,11 @@ public class DagUserInfo {
 
     private String parallelokAddr = "";
 
+    /**
+     * 设置合约的地址
+     *
+     * @param addr
+     */
     public void setContractAddr(String addr) {
         this.parallelokAddr = addr;
     }
