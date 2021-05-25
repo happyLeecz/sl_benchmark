@@ -19,6 +19,9 @@ public class Generator {
             int total, Integer conflictRate, Integer groups) {
         gi = 0;
         conflictRate = conflictRate == null ? 0 : conflictRate;
+        if(conflictRate == 0) {
+            groups = 0;
+        }
         groups = groups == null ? 1 : groups;
         int[][][] transactions = new int[groups + 1][][];
         // 生成冲突交易
@@ -37,6 +40,9 @@ public class Generator {
      */
     private static void generateConflictTransactionTestCases(
             int total, Integer conflictRate, Integer groups, int[][][] transactions) {
+        if(conflictRate == 0) {
+            return;
+        }
         int totalOfConflict = total * conflictRate / 100;
         // 计算每组的平均冲突交易数量，向上取整
         int conflictTransactionsPerGroup = (int) Math.ceil((double) totalOfConflict / groups);
