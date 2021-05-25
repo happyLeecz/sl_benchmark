@@ -36,21 +36,32 @@ public class Generator {
         return transactions;
     }
 
-    public static void saveToFile(int[][][] transactions) {
+    public static void saveToFile(int[][][] trans) throws IOException {
         int index = 0;
-        try (BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter(
-                                new File(
-                                        "/home/shijianfeng/fisco/java-sdk-demo/user/user-"
-                                                + System.currentTimeMillis())))) {
-            for (int i = 0; i < transactions.length; i++)
-                for (int j = 0; j < transactions[i].length; j++) {
-                    int from = transactions[i][j][0];
-                    int to = transactions[i][j][1];
-                    bw.write((index++) + "\t" + "[" + from + ", " + to + "]\n");
+        File transactions = new File("/home/shijianfeng/fisco/java-sdk-demo/user/transactions");
+        File transactionsByGroup =
+                new File("/home/shijianfeng/fisco/java-sdk-demo/user/transactionsPerGroup");
+        if (transactions.exists()) {
+            transactions.delete();
+        }
+        if (transactionsByGroup.exists()) {
+            transactionsByGroup.delete();
+        }
+        transactions.createNewFile();
+        transactionsByGroup.createNewFile();
+        try (BufferedWriter t = new BufferedWriter(new FileWriter(transactions));
+                BufferedWriter tbg = new BufferedWriter(new FileWriter(transactionsByGroup))) {
+            for (int i = 0; i < trans.length; i++) {
+                tbg.write("group " + (i + 1) + "===========================\n");
+                for (int j = 0; j < trans[i].length; j++) {
+                    int from = trans[i][j][0];
+                    int to = trans[i][j][1];
+                    t.write((index++) + "\t" + "[" + from + ", " + to + "]\n");
+                    tbg.write((index++) + "\t" + "[" + from + ", " + to + "]\n");
                 }
-            bw.flush();
+            }
+            t.flush();
+            tbg.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
