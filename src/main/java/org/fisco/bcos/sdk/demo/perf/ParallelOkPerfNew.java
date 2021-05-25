@@ -45,44 +45,62 @@ public class ParallelOkPerfNew {
     public static void main(String[] args)
             throws ContractException, IOException, InterruptedException {
         try {
+
+            // 获取命令行参数
+            if (args.length < 5) {
+                Usage();
+                return;
+            }
+            // 子链/群组/channel等的id
+            Integer groupId = Integer.valueOf(args[0]);
+            // 发送的tps数量
+            Integer total = Integer.valueOf(args[1]);
+            // 冲突率 0-100
+            Integer conflictRate = Integer.valueOf(args[2]);
+            // 根据相关性将交易进行分组，组数
+            Integer groups = Integer.valueOf(args[3]);
+            // 发送速率
+            Integer qps = Integer.valueOf(args[4]);
+
+            // 开始时间戳
+            long currentSeconds = System.currentTimeMillis() / 1000L;
+
+            // 加载配置文件
             String configFileName = ConstantConfig.CONFIG_FILE_NAME;
             URL configUrl = ParallelOkPerfNew.class.getClassLoader().getResource(configFileName);
             if (configUrl == null) {
                 System.out.println("The configFile " + configFileName + " doesn't exist!");
                 return;
             }
-            if (args.length < 5) {
-                Usage();
-                return;
-            }
-            Integer groupId = Integer.valueOf(args[0]);
-            Integer total = Integer.valueOf(args[1]);
-            Integer conflictRate = Integer.valueOf(args[2]);
-            Integer groups = Integer.valueOf(args[3]);
-            Integer qps = Integer.valueOf(args[4]);
-
-            long currentSeconds = System.currentTimeMillis() / 1000L;
             String configFile = configUrl.getPath();
+
+            // 实例化bcos的sdk
             BcosSDK sdk = BcosSDK.build(configFile);
             client = sdk.getClient(Integer.valueOf(groupId));
+
+            // 线程池
             threadPoolService =
                     new ThreadPoolService(
                             "ParallelOkPerf",
                             sdk.getConfig().getThreadPoolConfig().getMaxBlockingQueueSize());
 
             // ******************************************************
-            // 一、生成交易测试用例
+            // 一、生成交易测试用例集
             int[][][] tansactions =
                     Generator.generateTransactionTestCases(total, conflictRate, groups);
+
+            // 二、部署合约
             ParallelOk parallelOk;
             ParallelOkDemo parallelOkDemo;
-            // 二、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
+
             // 三、生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
-            //            System.out.println("the real user number is " + Generator.getGi());
+
+            System.out.println("Total number of users to be created:  " + Generator.getGi());
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
+
             // 四、串行
             //                        serialDagUserInfo.loadDagTransferUser();
             //            parallelOk =
@@ -133,6 +151,7 @@ public class ParallelOkPerfNew {
             //            // 九、正确性比对
             //            verify();
             // 十、性能评估
+            System.exit(0);
 
         } catch (Exception e) {
             System.out.println("ParallelOkPerf test failed, error info: " + e.getMessage());
