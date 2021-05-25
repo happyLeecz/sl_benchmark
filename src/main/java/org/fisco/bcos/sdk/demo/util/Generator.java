@@ -1,5 +1,9 @@
 package org.fisco.bcos.sdk.demo.util;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Generator {
@@ -28,7 +32,29 @@ public class Generator {
         generateConflictTransactionTestCases(total, conflictRate, groups, transactions);
         // 生成非冲突交易
         generateNonConflictTransactionTestCases(total - total * conflictRate / 10, transactions);
+        saveToFile(transactions);
         return transactions;
+    }
+
+    public static void saveToFile(int[][][] transactions) {
+        int index = 0;
+        try (BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter(
+                                new File(
+                                        "/home/shijianfeng/fisco/java-sdk-demo/user/user-"
+                                                + System.currentTimeMillis())))) {
+            for (int i = 0; i < transactions.length; i++)
+                for (int j = 0; j < transactions[i].length; j++) {
+                    int from = transactions[i][j][0];
+                    int to = transactions[i][j][1];
+                    bw.write((index++) + "\t" + "[" + from + ", " + to + "]\n");
+                }
+            bw.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

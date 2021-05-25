@@ -114,7 +114,7 @@ public class ParallelOkDemo {
         //        long currentSeconds = System.currentTimeMillis() / 1000L;
         Integer area = userCount.intValue() / 10;
         long startTime = System.currentTimeMillis();
-        System.out.println("====================== start timetamp" + startTime);
+        System.out.println("====================== start time" + startTime);
         collector.setTotal(userCount.intValue());
         collector.setStartTimestamp(startTime);
         AtomicInteger sendFailed = new AtomicInteger(0);
