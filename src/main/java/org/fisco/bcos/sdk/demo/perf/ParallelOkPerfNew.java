@@ -139,8 +139,8 @@ public class ParallelOkPerfNew {
     }
 
     public static void verify() throws InterruptedException {
-        int serialDaglUserInfoSize = serialDagUserInfo.getUserMap().size();
-        int parallelDagUserInfoSize = parallelDagUserInfo.getUserMap().size();
+        int serialDaglUserInfoSize = serialDagUserInfo.size();
+        int parallelDagUserInfoSize = parallelDagUserInfo.size();
         AtomicInteger sameCount = new AtomicInteger(0);
         AtomicInteger notSameCount = new AtomicInteger(0);
         assert serialDaglUserInfoSize == parallelDagUserInfoSize : "user size is not the same";

@@ -114,9 +114,12 @@ public class PerformanceCollector {
 
         if (received.incrementAndGet() >= total) {
             System.out.println("total");
-
-            Long totalTime = System.currentTimeMillis() - startTimestamp;
-
+            long curr = System.currentTimeMillis();
+            Long totalTime = curr - startTimestamp;
+            System.out.println("====================== start timestamp" + startTimestamp);
+            System.out.println("====================== current time" + curr);
+            System.out.println("====================== received" + received.intValue());
+            System.out.println("====================== total" + total);
             System.out.println(
                     "===================================================================");
 
