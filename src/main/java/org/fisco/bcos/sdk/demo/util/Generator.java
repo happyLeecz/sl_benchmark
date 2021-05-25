@@ -19,7 +19,7 @@ public class Generator {
             int total, Integer conflictRate, Integer groups) {
         gi = 0;
         conflictRate = conflictRate == null ? 0 : conflictRate;
-        if(conflictRate == 0) {
+        if (conflictRate == 0) {
             groups = 0;
         }
         groups = groups == null ? 1 : groups;
@@ -40,7 +40,7 @@ public class Generator {
      */
     private static void generateConflictTransactionTestCases(
             int total, Integer conflictRate, Integer groups, int[][][] transactions) {
-        if(conflictRate == 0) {
+        if (conflictRate == 0) {
             return;
         }
         int totalOfConflict = total * conflictRate / 100;
