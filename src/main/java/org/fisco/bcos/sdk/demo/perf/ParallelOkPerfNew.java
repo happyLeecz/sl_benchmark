@@ -57,7 +57,7 @@ public class ParallelOkPerfNew {
             Integer total = Integer.valueOf(args[1]);
             // 冲突率 0-100
             Integer conflictRate = Integer.valueOf(args[2]);
-            // 根据相关性将交易进行分组，组数
+            // 根据相关性将交易进行分组，组数，若冲突率为0，则此处填0
             Integer groups = Integer.valueOf(args[3]);
             // 发送速率
             Integer qps = Integer.valueOf(args[4]);

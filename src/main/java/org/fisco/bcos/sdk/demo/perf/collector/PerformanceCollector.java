@@ -31,25 +31,69 @@ public class PerformanceCollector {
     private AtomicLong timeout2000 = new AtomicLong(0);
     private AtomicLong totalCost = new AtomicLong(0);
 
+    // 交易总数
     private Integer total = 0;
+    // 收到的交易回执的数量
     private AtomicInteger received = new AtomicInteger(0);
+    // 收到的错误的交易回执的数量
     private AtomicInteger error = new AtomicInteger(0);
+    // 开始的时间戳
     private Long startTimestamp = System.currentTimeMillis();
 
+    /**
+     * 得到交易总数
+     *
+     * @return
+     */
     public Integer getTotal() {
-        return total;
+        return this.total;
     }
 
+    /**
+     * 设置交易总数
+     *
+     * @param total
+     */
     public void setTotal(Integer total) {
         this.total = total;
     }
 
+    /**
+     * 得到收到的交易回执数量
+     *
+     * @return
+     */
     public Integer getReceived() {
-        return received.get();
+
+        return this.received.get();
     }
 
+    /**
+     * 设置收到的交易回执的数量
+     *
+     * @param received
+     */
     public void setReceived(Integer received) {
+        // getAndSet ：以原子方式设置为给定值，并返回以前的值。
         this.received.getAndSet(received);
+    }
+
+    /**
+     * 设置开始时间戳
+     *
+     * @param startTimestamp
+     */
+    public void setStartTimestamp(Long startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
+
+    /**
+     * 得到开始时间戳
+     *
+     * @return
+     */
+    public Long getStartTimestamp() {
+        return this.startTimestamp;
     }
 
     public void onRpcMessage(JsonRpcResponse response, Long cost) {
@@ -65,6 +109,12 @@ public class PerformanceCollector {
         }
     }
 
+    /**
+     * 处理回执
+     *
+     * @param receipt
+     * @param cost 该交易耗费的时间
+     */
     public void onMessage(TransactionReceipt receipt, Long cost) {
         try {
             boolean errorMessage = false;
@@ -76,17 +126,26 @@ public class PerformanceCollector {
                         receipt.getMessage());
                 errorMessage = true;
             }
+            // 统计状态
             stat(errorMessage, cost);
         } catch (Exception e) {
             logger.error("error:", e);
         }
     }
 
+    /**
+     * 统计回执状态
+     *
+     * @param errorMessage
+     * @param cost 该交易耗费的时间
+     */
     public void stat(boolean errorMessage, Long cost) {
+        // 处理错误的统计
         if (errorMessage) {
             error.addAndGet(1);
         }
 
+        // 收到的数量
         if ((received.get() + 1) % (total / 10) == 0) {
             System.out.println(
                     "                                                       |received:"
@@ -94,6 +153,7 @@ public class PerformanceCollector {
                             + "%");
         }
 
+        // 交易返回所耗费的时间分布，单位毫秒
         if (cost < 50) {
             less50.incrementAndGet();
         } else if (cost < 100) {
@@ -110,13 +170,20 @@ public class PerformanceCollector {
             timeout2000.incrementAndGet();
         }
 
+        // 增加到总耗时
         totalCost.addAndGet(cost);
 
+        // 收到的数量如果大于等于发送的总交易量
         if (received.incrementAndGet() >= total) {
+
             System.out.println("total");
+
+            // 当前的时间戳
             long curr = System.currentTimeMillis();
-            Long totalTime = curr - startTimestamp;
-            System.out.println("====================== start timestamp" + startTimestamp);
+            // 总耗时
+            Long totalTime = curr - this.startTimestamp;
+
+            System.out.println("====================== start timestamp" + this.startTimestamp);
             System.out.println("====================== current time" + curr);
             System.out.println("====================== received" + received.intValue());
             System.out.println("====================== total" + total);
@@ -182,13 +249,5 @@ public class PerformanceCollector {
                             + String.valueOf((double) timeout2000.get() / total * 100)
                             + "%");
         }
-    }
-
-    public void setStartTimestamp(Long startTimestamp) {
-        this.startTimestamp = startTimestamp;
-    }
-
-    public Long getStartTimestamp() {
-        return startTimestamp;
     }
 }

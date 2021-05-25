@@ -7,11 +7,18 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Generator {
+    /**
+     * 得到需要生成的用户数
+     *
+     * @return
+     */
     public static int getGi() {
         return gi;
     }
 
+    // 需要生成的用户数
     private static int gi = 0;
+
     /**
      * 生成交易测试用例，包括冲突交易和非冲突交易
      *
@@ -36,6 +43,12 @@ public class Generator {
         return transactions;
     }
 
+    /**
+     * 将测试集写入到文件
+     *
+     * @param trans
+     * @throws IOException
+     */
     public static void saveToFile(int[][][] trans) throws IOException {
         int index = 0;
         File transactions = new File("/home/shijianfeng/fisco/java-sdk-demo/user/transactions");

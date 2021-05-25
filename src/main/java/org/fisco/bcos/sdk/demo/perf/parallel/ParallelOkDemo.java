@@ -102,25 +102,52 @@ public class ParallelOkDemo {
         System.out.println(" \tverify_failed count is " + verifyFailed);
     }
 
+    /**
+     * 新增用户到智能合约
+     *
+     * @param userCount
+     * @param qps
+     * @param currentSeconds ：测试开始的时间戳
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
-        AtomicInteger sended = new AtomicInteger(0);
-        PerformanceCollector collector = new PerformanceCollector();
+
         System.out.println(
                 "==================================================================== add users");
         System.out.println("Start UserAdd test, count " + userCount);
-        RateLimiter limiter = RateLimiter.create(qps.intValue());
+
+        // 已经发送的交易数量
+        AtomicInteger sended = new AtomicInteger(0);
+        // 发送失败的数量
+        AtomicInteger sendFailed = new AtomicInteger(0);
 
         //        long currentSeconds = System.currentTimeMillis() / 1000L;
+        // 所花费时间的统计比例
         Integer area = userCount.intValue() / 10;
-        long startTime = System.currentTimeMillis();
-        System.out.println("====================== start time" + startTime);
+
+        // 发送交易速率控制器
+        RateLimiter limiter = RateLimiter.create(qps.intValue());
+
+        // 性能收集器
+        PerformanceCollector collector = new PerformanceCollector();
         collector.setTotal(userCount.intValue());
+        // 开始时间
+        long startTime = System.currentTimeMillis();
+        // 为收集器设置统计开始的时间
         collector.setStartTimestamp(startTime);
-        AtomicInteger sendFailed = new AtomicInteger(0);
+        System.out.println("====================== start time" + startTime);
+
+        // 每次循环选用一个线程，发送一个交易，以生成一个用户
         for (Integer i = 0; i < userCount.intValue(); i++) {
+
+            // 本次循环的下标
             final Integer index = i;
+
+            // 是否允许发送
             limiter.acquire();
+
             threadPoolService
                     .getThreadPool()
                     .execute(
@@ -128,10 +155,13 @@ public class ParallelOkDemo {
                                 @Override
                                 public void run() {
                                     // generate the user according to currentSeconds
+                                    // 生成用户，测试开始的时间戳+当前下标
                                     String user =
                                             Long.toHexString(currentSeconds)
                                                     + Integer.toHexString(index);
+                                    // 设置账户余额
                                     BigInteger amount = new BigInteger("1000000000");
+
                                     DagTransferUser dtu = new DagTransferUser();
                                     dtu.setUser(user);
                                     dtu.setAmount(amount);
@@ -143,11 +173,15 @@ public class ParallelOkDemo {
                                                     index);
                                     callback.setTimeout(0);
                                     callback.setUser(dtu);
-                                    try {
-                                        callback.recordStartTime();
-                                        parallelOk.set(user, amount, callback);
-                                        int current = sended.incrementAndGet();
 
+                                    try {
+
+                                        callback.recordStartTime();
+                                        // 发送交易
+                                        parallelOk.set(user, amount, callback);
+
+                                        // 当前已经发送的数量
+                                        int current = sended.incrementAndGet();
                                         if (current >= area && ((current % area) == 0)) {
                                             long elapsed = System.currentTimeMillis() - startTime;
                                             double sendSpeed = current / ((double) elapsed / 1000);
@@ -162,6 +196,8 @@ public class ParallelOkDemo {
                                         }
 
                                     } catch (Exception e) {
+
+                                        // 发送失败的情况
                                         logger.warn(
                                                 "addUser failed, error info: {}", e.getMessage());
                                         sendFailed.incrementAndGet();
@@ -236,7 +272,9 @@ public class ParallelOkDemo {
         System.out.println("Sending transfer transactions...");
         RateLimiter limiter = RateLimiter.create(qps.intValue());
         int division = count.intValue() / 10;
+
         long startTime = System.currentTimeMillis();
+        // 为收集器设置统计开始的时间
         collector.setStartTimestamp(startTime);
         collector.setTotal(count.intValue());
         AtomicInteger sendFailed = new AtomicInteger(0);

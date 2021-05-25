@@ -38,6 +38,14 @@ public class ParallelOkCallback extends TransactionCallback {
     private BigInteger amount = null;
     private Integer index;
 
+    /**
+     * 发送交易之后回调
+     *
+     * @param collector
+     * @param dagUserInfo
+     * @param callbackType
+     * @param index
+     */
     public ParallelOkCallback(
             PerformanceCollector collector,
             DagUserInfo dagUserInfo,
@@ -49,6 +57,7 @@ public class ParallelOkCallback extends TransactionCallback {
         this.index = index;
     }
 
+    /** 基于开始时间戳 */
     public void recordStartTime() {
         this.startTime = System.currentTimeMillis();
     }
@@ -59,8 +68,10 @@ public class ParallelOkCallback extends TransactionCallback {
         try {
             if (receipt.isStatusOK()) {
                 if (callbackType.compareTo(ADD_USER_CALLBACK) == 0) { // add test
+                    // 本地用户新增
                     dagUserInfo.addUser(index, user);
                 } else if (callbackType.compareTo(TRANS_CALLBACK) == 0) { // transfer test
+                    // 本地数据修改
                     fromUser.decrease(amount);
                     toUser.increase(amount);
                 }
