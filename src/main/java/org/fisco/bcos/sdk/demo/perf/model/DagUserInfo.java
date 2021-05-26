@@ -67,7 +67,13 @@ public class DagUserInfo {
         this.file = file;
     }
 
+    /**
+     * 新增用户
+     * @param index 下标
+     * @param user
+     */
     public synchronized void addUser(Integer index, DagTransferUser user) {
+
         userMap.put(index, user);
     }
 
@@ -90,16 +96,29 @@ public class DagUserInfo {
         return userList.get((idx + mid) % userList.size());
     }
 
+    /**
+     * 根据用户id得到该用户
+     *
+     * @param idx
+     * @return
+     */
     public DagTransferUser getDTU(int idx) {
         assert !isEmpty() : "Has no user.";
         return userMap.get(idx);
     }
 
     public DagTransferUser getNext(int idx) {
+
         return userList.get((idx + 1) % userList.size());
+
     }
 
+    /**
+     * 总共有多少个用户
+     * @return
+     */
     public int size() {
+
         return userMap.size();
     }
 

@@ -117,15 +117,20 @@ public class PerformanceCollector {
      */
     public void onMessage(TransactionReceipt receipt, Long cost) {
         try {
+
+            // 标志该交易回执是否有错误信息
             boolean errorMessage = false;
+
             if (!receipt.isStatusOK()) {
                 logger.error(
                         "error receipt, status: {}, output: {}, message: {}",
                         receipt.getStatus(),
                         receipt.getOutput(),
                         receipt.getMessage());
+                // 存在错误信息
                 errorMessage = true;
             }
+
             // 统计状态
             stat(errorMessage, cost);
         } catch (Exception e) {
@@ -140,6 +145,7 @@ public class PerformanceCollector {
      * @param cost 该交易耗费的时间
      */
     public void stat(boolean errorMessage, Long cost) {
+
         // 处理错误的统计
         if (errorMessage) {
             error.addAndGet(1);

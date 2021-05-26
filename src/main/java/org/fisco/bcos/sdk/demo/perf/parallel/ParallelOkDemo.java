@@ -215,6 +215,7 @@ public class ParallelOkDemo {
                                 }
                             });
         }
+        // 如果性能收集器没有收到足够多的交易，则打印日志
         while (collector.getReceived().intValue() != userCount.intValue()) {
             logger.info(
                     " sendFailed: {}, received: {}, total: {}",
@@ -223,9 +224,10 @@ public class ParallelOkDemo {
                     collector.getTotal());
             Thread.sleep(100);
         }
+        // 保存合约地址
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
         //        dagUserInfo.writeDagTransferUser();
-        //        System.exit(0);
+        System.exit(0);
     }
 
     //    public void queryAccount(BigInteger qps) throws InterruptedException {
@@ -278,25 +280,44 @@ public class ParallelOkDemo {
      */
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
+
+        // 已经发送的交易的数量
         AtomicInteger sended = new AtomicInteger(0);
-        PerformanceCollector collector = new PerformanceCollector();
+        // 发送失败的交易数
+        AtomicInteger sendFailed = new AtomicInteger(0);
+        // 所花费时间的统计比例
+        int division = count.intValue() / 10;
+
         System.out.println(
                 "==================================================================== Querying account info...");
         queryAccount(qps);
         System.out.println("Sending transfer transactions...");
-        RateLimiter limiter = RateLimiter.create(qps.intValue());
-        int division = count.intValue() / 10;
 
-        long startTime = System.currentTimeMillis();
+        // 发送速率控制器
+        RateLimiter limiter = RateLimiter.create(qps.intValue());
+
+        // 性能收集器
+        PerformanceCollector collector = new PerformanceCollector();
         // 为收集器设置统计开始的时间
+        long startTime = System.currentTimeMillis();
         collector.setStartTimestamp(startTime);
+        // 为收集器设置要收集的交易总数
         collector.setTotal(count.intValue());
-        AtomicInteger sendFailed = new AtomicInteger(0);
+
+        // transactions为3维数组，第1维是分组
         for (Integer i = 0; i < transactions.length; i++) {
+            // 第2维是交易，第3维是交易双方
             for (Integer j = 0; j < transactions[i].length; j++) {
+
+                // 是否能够发送
                 limiter.acquire();
+
+                // 转出者的下标
                 final int fromUserIndex = transactions[i][j][0];
+                // 收款者的下标
                 final int toUserIndex = transactions[i][j][1];
+
+                // 每笔交易都由一个线程发送
                 threadPoolService
                         .getThreadPool()
                         .execute(
@@ -304,12 +325,11 @@ public class ParallelOkDemo {
                                     @Override
                                     public void run() {
                                         try {
-                                            //                                            Random
-                                            // random = new Random();
-                                            //                                            int r =
-                                            // random.nextInt(100);
+
+                                            // 转账的金额
                                             BigInteger amount = BigInteger.valueOf(10);
 
+                                            // 设置回调
                                             ParallelOkCallback callback =
                                                     new ParallelOkCallback(
                                                             collector,
@@ -317,22 +337,33 @@ public class ParallelOkDemo {
                                                             ParallelOkCallback.TRANS_CALLBACK,
                                                             null);
                                             callback.setTimeout(0);
+
+                                            // 转账者
                                             DagTransferUser from =
                                                     dagUserInfo.getDTU(fromUserIndex);
+                                            // 收款者
                                             DagTransferUser to = dagUserInfo.getDTU(toUserIndex);
 
                                             callback.setFromUser(from);
                                             callback.setToUser(to);
                                             callback.setAmount(amount);
+
                                             // 记录开始发送的时间
                                             callback.recordStartTime();
+
+                                            // 发送转账交易
                                             parallelOk.transfer(
                                                     from.getUser(), to.getUser(), amount, callback);
+
+                                            // 已经发送的交易数
                                             int current = sended.incrementAndGet();
+
                                             if (current >= division
                                                     && ((current % division) == 0)) {
+                                                // 已经花费时间
                                                 long elapsed =
                                                         System.currentTimeMillis() - startTime;
+                                                // 当前qps
                                                 double sendSpeed =
                                                         current / ((double) elapsed / 1000);
                                                 System.out.println(
@@ -345,15 +376,22 @@ public class ParallelOkDemo {
                                                                 + sendSpeed);
                                             }
                                         } catch (Exception e) {
+
                                             logger.error(
                                                     "call transfer failed, error info: {}",
                                                     e.getMessage());
+
+                                            // 构造发送失败的交易收据
                                             TransactionReceipt receipt = new TransactionReceipt();
+                                            // 设置交易发送失败的状态
                                             receipt.setStatus("-1");
                                             receipt.setMessage(
                                                     "call transfer failed, error info: "
                                                             + e.getMessage());
+                                            // 将该收据传入到性能收集器中
                                             collector.onMessage(receipt, Long.valueOf(0));
+
+                                            // 发送失败的数量+1
                                             sendFailed.incrementAndGet();
                                         }
                                     }
@@ -361,6 +399,7 @@ public class ParallelOkDemo {
             }
         }
 
+        // 如果性能收集器没有收到足够多的交易，则打印日志
         while (collector.getReceived().intValue() != count.intValue()) {
             Thread.sleep(3000);
             logger.info(
@@ -370,16 +409,33 @@ public class ParallelOkDemo {
                     collector.getTotal());
         }
         //        veryTransferData(qps);
-        //        System.exit(0);
+        System.exit(0);
     }
 
+    /**
+     * 查询区块链上的余额然后更新到本地
+     *
+     * @param qps
+     * @throws InterruptedException
+     */
     public void queryAccount(BigInteger qps) throws InterruptedException {
+
+        // qps速率控制器
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
+        // 已经查询成功的数量
         AtomicInteger querySuccess = new AtomicInteger(0);
+        // 总用户
         int userSize = dagUserInfo.size();
+
+        // 查询每个用户
         for (int i = 0; i < userSize; i++) {
+
+            // 是否允许发送
             rateLimiter.acquire();
+
+            // 用户下标
             final int userIndex = i;
+
             threadPoolService
                     .getThreadPool()
                     .execute(
@@ -387,9 +443,16 @@ public class ParallelOkDemo {
                                 @Override
                                 public void run() {
                                     try {
+                                        // 得到当前用户信息
                                         DagTransferUser user = dagUserInfo.getDTU(userIndex);
+
+                                        // 查询用户余额
                                         BigInteger balance = parallelOk.balanceOf(user.getUser());
+
+                                        // 设置本地用户的余额
                                         user.setAmount(balance);
+
+                                        // 已经查询成功的数量
                                         int all = querySuccess.incrementAndGet();
                                         if (all >= userSize) {
                                             System.out.println(
@@ -397,19 +460,23 @@ public class ParallelOkDemo {
                                                             + dateFormat.format(new Date())
                                                             + " query account finished");
                                         }
+
                                     } catch (ContractException exception) {
                                         logger.warn(
                                                 "queryAccount for {} failed, error info: {}",
                                                 dagUserInfo.getDTU(userIndex).getUser(),
                                                 exception.getMessage());
-                                        System.exit(0);
+                                        // System.exit(0);
                                     }
                                 }
                             });
         }
 
+        // 等待所有查询完成
         while (querySuccess.intValue() < userSize) {
             Thread.sleep(50);
         }
+
+        System.exit(0);
     }
 }

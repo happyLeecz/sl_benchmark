@@ -102,6 +102,7 @@ public class ParallelOkPerfNew {
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
 
             // 四、串行
+            // 加载用户
             serialDagUserInfo.loadDagTransferUser();
             parallelOk =
                     ParallelOk.load(
