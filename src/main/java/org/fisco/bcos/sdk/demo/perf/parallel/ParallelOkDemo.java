@@ -413,7 +413,7 @@ public class ParallelOkDemo {
                                         int all = querySuccess.incrementAndGet();
                                         if (all >= userSize) {
                                             System.out.println(
-                                                            dateFormat.format(new Date())
+                                                    dateFormat.format(new Date())
                                                             + " query account finished");
                                         }
 
