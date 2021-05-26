@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Generator {
     /**
@@ -183,8 +182,6 @@ public class Generator {
                 idx++;
             }
         }
-        for (int i = 0; i < totalOfConflictTestCasesPerGroup; i++)
-            System.out.println(Arrays.toString(conflictTransactions[i]));
         return conflictTransactions;
     }
 
