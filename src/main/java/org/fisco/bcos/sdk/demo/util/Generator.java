@@ -38,7 +38,7 @@ public class Generator {
         // 生成冲突交易
         generateConflictTransactionTestCases(total, conflictRate, groups, transactions);
         // 生成非冲突交易
-        generateNonConflictTransactionTestCases(total - total * conflictRate / 10, transactions);
+        generateNonConflictTransactionTestCases(total - total * conflictRate / 100, transactions);
         saveToFile(transactions);
         return transactions;
     }
