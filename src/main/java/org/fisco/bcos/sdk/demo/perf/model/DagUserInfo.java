@@ -69,6 +69,7 @@ public class DagUserInfo {
 
     /**
      * 新增用户
+     *
      * @param index 下标
      * @param user
      */
@@ -110,11 +111,11 @@ public class DagUserInfo {
     public DagTransferUser getNext(int idx) {
 
         return userList.get((idx + 1) % userList.size());
-
     }
 
     /**
      * 总共有多少个用户
+     *
      * @return
      */
     public int size() {
