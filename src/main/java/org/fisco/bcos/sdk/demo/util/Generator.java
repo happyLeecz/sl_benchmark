@@ -111,10 +111,7 @@ public class Generator {
         int conflictTransactionsPerGroup = (int) Math.ceil((double) totalOfConflict / groups);
         // 最后一个组需要移除的多余的冲突交易数，当不需要移除的时候就是 0
         int lastGroupToRemove = conflictTransactionsPerGroup * groups - totalOfConflict;
-        //        // 交易组信息数组，第一维代表组，第二维代表组里的某个交易，第三维代表该交易的信息
-        //        int[][][] conflictTransactionGroups = new int[groups][][];
         for (int i = 0; i < groups; i++) {
-            System.out.println("[group " + (i + 1) + "] ####################### start");
             if (i == groups - 1)
                 // 最后一组需要特判
                 transactions[i] =
@@ -123,9 +120,6 @@ public class Generator {
             else
                 transactions[i] =
                         generateConflictTransactionTestCasesPerGroup(conflictTransactionsPerGroup);
-            System.out.println();
-
-            System.out.println("[group " + (i + 1) + "] ####################### start");
         }
     }
     /**
@@ -150,8 +144,6 @@ public class Generator {
         int removedItemsOnFirstLayer = 0;
         // 总层数
         int layers = (int) Math.ceil(res);
-        System.out.println(res);
-        System.out.println(layers);
         // 求出需要在最上面一层除去的多余的交易数
         if (Math.ceil(res) != res) {
             removedItemsOnFirstLayer =
