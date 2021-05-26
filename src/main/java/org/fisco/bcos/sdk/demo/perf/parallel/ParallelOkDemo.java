@@ -227,7 +227,7 @@ public class ParallelOkDemo {
         // 保存合约地址
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
         //        dagUserInfo.writeDagTransferUser();
-        System.exit(0);
+
     }
 
     //    public void queryAccount(BigInteger qps) throws InterruptedException {
@@ -409,7 +409,7 @@ public class ParallelOkDemo {
                     collector.getTotal());
         }
         //        veryTransferData(qps);
-        System.exit(0);
+
     }
 
     /**
@@ -477,6 +477,5 @@ public class ParallelOkDemo {
             Thread.sleep(50);
         }
 
-        System.exit(0);
     }
 }

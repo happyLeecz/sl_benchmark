@@ -151,12 +151,12 @@ public class ParallelOkPerfNew {
             //            // 九、正确性比对
             //            verify();
             // 十、性能评估
-            System.exit(0);
+
 
         } catch (Exception e) {
             System.out.println("ParallelOkPerf test failed, error info: " + e.getMessage());
-            System.exit(0);
         }
+        System.exit(0);
     }
 
     public static void verify() throws InterruptedException {
