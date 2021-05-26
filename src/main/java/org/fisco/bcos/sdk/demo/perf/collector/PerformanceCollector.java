@@ -189,12 +189,10 @@ public class PerformanceCollector {
             // 总耗时
             Long totalTime = curr - this.startTimestamp;
 
-            System.out.println("====================== start timestamp" + this.startTimestamp);
-            System.out.println("====================== current time" + curr);
-            System.out.println("====================== received" + received.intValue());
-            System.out.println("====================== total" + total);
-            System.out.println(
-                    "===================================================================");
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>> start timestamp " + this.startTimestamp);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>> current time " + curr);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>> received " + received.intValue());
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>> total " + total + "\n");
 
             System.out.println("Total transactions:  " + String.valueOf(total));
             System.out.println("Total time: " + String.valueOf(totalTime) + "ms");

@@ -224,7 +224,7 @@ public class ParallelOkDemo {
         // 保存合约地址
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
         System.out.println(
-                "================================ add users ================================");
+                "================================ add users ================================\n");
     }
 
     /**
@@ -365,7 +365,7 @@ public class ParallelOkDemo {
                     collector.getTotal());
         }
         System.out.println(
-                "================================ transfer ================================");
+                "================================ transfer ================================\n");
     }
 
     /**
@@ -434,6 +434,6 @@ public class ParallelOkDemo {
             Thread.sleep(50);
         }
         System.out.println(
-                "================================ queryAccount ================================");
+                "================================ queryAccount ================================\n");
     }
 }
