@@ -94,66 +94,42 @@ public class ParallelOkPerfNew {
             ParallelOkDemo parallelOkDemo;
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
 
-            // 三、生成用户
+            // 三、串行生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
-
             System.out.println("Total number of users to be created:  " + Generator.getGi());
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
 
-            // 四、串行
-            // 加载用户
-            //            serialDagUserInfo.loadDagTransferUser();
-            //            parallelOk =
-            //                    ParallelOk.load(
-            //                            serialDagUserInfo.getContractAddr(),
-            //                            client,
-            //                            client.getCryptoSuite().getCryptoKeyPair());
-            //            System.out.println(
-            //                    "====== ParallelOk trans, load success, address: "
-            //                            + parallelOk.getContractAddress());
-            //            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo,
-            // threadPoolService);
+            // 四、串行转账
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
-            // 获取交易之后的每个用户的余额数据
+
+            // 五、获取交易之后的每个用户的余额数据
             parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
 
             // ******************************************************
-            // 五、部署合约
+            // 六、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
 
-            // 六、开启并行
+            // 七、开启并行
             parallelOk.enableParallel();
 
-            // 七、并行生成用户
+            // 八、并行生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
-            // 八、并行
-            //            parallelDagUserInfo.loadDagTransferUser();
-            //            parallelOk =
-            //                    ParallelOk.load(
-            //                            parallelDagUserInfo.getContractAddr(),
-            //                            client,
-            //                            client.getCryptoSuite().getCryptoKeyPair());
-            //            System.out.println(
-            //                    "====== ParallelOk trans, load success, address: "
-            //                            + parallelOk.getContractAddress());
-            //            parallelOkDemo = new ParallelOkDemo(parallelOk,
-            //             parallelDagUserInfo,
-            //                         threadPoolService);
 
-            // 八、并行转账
+            // 九、并行转账
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
-            // 获取交易之后的每个用户的余额数据
+
+            // 十、获取交易之后的每个用户的余额数据
             parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
 
             // ******************************************************
-            // 九、正确性比对
+            // 十一、正确性比对
             verify();
-            // 十、性能评估
+            // 十二、性能评估
 
         } catch (Exception e) {
             System.out.println("ParallelOkPerf test failed, error info: " + e.getMessage());

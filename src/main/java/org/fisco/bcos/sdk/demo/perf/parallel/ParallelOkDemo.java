@@ -33,13 +33,10 @@ import org.slf4j.LoggerFactory;
 
 public class ParallelOkDemo {
     private static final Logger logger = LoggerFactory.getLogger(ParallelOkDemo.class);
-    //    private AtomicInteger sended;
     private AtomicInteger getted = new AtomicInteger(0);
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final ParallelOk parallelOk;
     private final ThreadPoolService threadPoolService;
-    //    private PerformanceCollector collector;
     private final DagUserInfo dagUserInfo;
 
     /**
@@ -51,11 +48,9 @@ public class ParallelOkDemo {
      */
     public ParallelOkDemo(
             ParallelOk parallelOk, DagUserInfo dagUserInfo, ThreadPoolService threadPoolService) {
-        //        this.sended = new AtomicInteger(0);
         this.threadPoolService = threadPoolService;
         this.parallelOk = parallelOk;
         this.dagUserInfo = dagUserInfo;
-        //        this.collector = new PerformanceCollector();
     }
 
     public void veryTransferData(BigInteger qps) throws InterruptedException {
@@ -122,21 +117,16 @@ public class ParallelOkDemo {
             throws InterruptedException, IOException {
 
         System.out.println(
-                "==================================================================== add users");
+                "================================ add users ================================");
         System.out.println("Start UserAdd test, count " + userCount);
-
         // 已经发送的交易数量
         AtomicInteger sended = new AtomicInteger(0);
         // 发送失败的数量
         AtomicInteger sendFailed = new AtomicInteger(0);
-
-        //        long currentSeconds = System.currentTimeMillis() / 1000L;
         // 所花费时间的统计比例
         Integer area = userCount.intValue() / 10;
-
         // 发送交易速率控制器
         RateLimiter limiter = RateLimiter.create(qps.intValue());
-
         // 性能收集器
         PerformanceCollector collector = new PerformanceCollector();
         collector.setTotal(userCount.intValue());
@@ -233,48 +223,9 @@ public class ParallelOkDemo {
         }
         // 保存合约地址
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
-        //        dagUserInfo.writeDagTransferUser();
-
+        System.out.println(
+                "================================ add users ================================");
     }
-
-    //    public void queryAccount(BigInteger qps) throws InterruptedException {
-    //        final List<DagTransferUser> allUsers = dagUserInfo.getUserList();
-    //        RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
-    //        AtomicInteger sent = new AtomicInteger(0);
-    //        for (Integer i = 0; i < allUsers.size(); i++) {
-    //            final Integer index = i;
-    //            rateLimiter.acquire();
-    //            threadPoolService
-    //                    .getThreadPool()
-    //                    .execute(
-    //                            new Runnable() {
-    //                                @Override
-    //                                public void run() {
-    //                                    try {
-    //                                        BigInteger result =
-    //
-    // parallelOk.balanceOf(allUsers.get(index).getUser());
-    //                                        allUsers.get(index).setAmount(result);
-    //                                        int all = sent.incrementAndGet();
-    //                                        if (all >= allUsers.size()) {
-    //                                            System.out.println(
-    //                                                    dateFormat.format(new Date())
-    //                                                            + " Query account finished");
-    //                                        }
-    //                                    } catch (ContractException exception) {
-    //                                        logger.warn(
-    //                                                "queryAccount for {} failed, error info: {}",
-    //                                                allUsers.get(index).getUser(),
-    //                                                exception.getMessage());
-    //                                        System.exit(0);
-    //                                    }
-    //                                }
-    //                            });
-    //        }
-    //        while (sent.get() < allUsers.size()) {
-    //            Thread.sleep(50);
-    //        }
-    //    }
 
     /**
      * 转账
@@ -287,7 +238,8 @@ public class ParallelOkDemo {
      */
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
-
+        System.out.println(
+                "================================ transfer ================================");
         // 已经发送的交易的数量
         AtomicInteger sended = new AtomicInteger(0);
         // 发送失败的交易数
@@ -412,8 +364,8 @@ public class ParallelOkDemo {
                     collector.getReceived().intValue(),
                     collector.getTotal());
         }
-        //        veryTransferData(qps);
-
+        System.out.println(
+                "================================ transfer ================================");
     }
 
     /**
@@ -423,7 +375,8 @@ public class ParallelOkDemo {
      * @throws InterruptedException
      */
     public void queryAccount(BigInteger qps) throws InterruptedException {
-
+        System.out.println(
+                "================================ queryAccount ================================");
         // qps速率控制器
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
         // 已经查询成功的数量
@@ -480,5 +433,7 @@ public class ParallelOkDemo {
         while (querySuccess.intValue() < userSize) {
             Thread.sleep(50);
         }
+        System.out.println(
+                "================================ queryAccount ================================");
     }
 }
