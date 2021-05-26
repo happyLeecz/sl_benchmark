@@ -36,6 +36,7 @@ public class DagUserInfo {
 
     private String file = null;
 
+    // 合约地址
     private String parallelokAddr = "";
 
     /**
@@ -44,9 +45,15 @@ public class DagUserInfo {
      * @param addr
      */
     public void setContractAddr(String addr) {
+
         this.parallelokAddr = addr;
     }
 
+    /**
+     * 得到合约地址
+     *
+     * @return
+     */
     public String getContractAddr() {
         return this.parallelokAddr;
     }
@@ -123,6 +130,11 @@ public class DagUserInfo {
         return userMap.size();
     }
 
+    /**
+     * 将用户写入到文件
+     *
+     * @throws IOException
+     */
     public void writeDagTransferUser() throws IOException {
         if (file == null) {
             return;
@@ -154,6 +166,11 @@ public class DagUserInfo {
         System.out.println(" Write DagTransferUser end, count is " + userList.size());
     }
 
+    /**
+     * 从文件中载入用户
+     *
+     * @throws IOException
+     */
     public void loadDagTransferUser() throws IOException {
         if (file == null) {
             return;

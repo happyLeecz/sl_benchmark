@@ -42,6 +42,13 @@ public class ParallelOkDemo {
     //    private PerformanceCollector collector;
     private final DagUserInfo dagUserInfo;
 
+    /**
+     * 构造函数
+     *
+     * @param parallelOk
+     * @param dagUserInfo
+     * @param threadPoolService
+     */
     public ParallelOkDemo(
             ParallelOk parallelOk, DagUserInfo dagUserInfo, ThreadPoolService threadPoolService) {
         //        this.sended = new AtomicInteger(0);
@@ -288,9 +295,6 @@ public class ParallelOkDemo {
         // 所花费时间的统计比例
         int division = count.intValue() / 10;
 
-        System.out.println(
-                "==================================================================== Querying account info...");
-        queryAccount(qps);
         System.out.println("Sending transfer transactions...");
 
         // 发送速率控制器
@@ -476,6 +480,5 @@ public class ParallelOkDemo {
         while (querySuccess.intValue() < userSize) {
             Thread.sleep(50);
         }
-
     }
 }

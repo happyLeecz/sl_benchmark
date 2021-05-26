@@ -103,16 +103,17 @@ public class ParallelOkPerfNew {
 
             // 四、串行
             // 加载用户
-            serialDagUserInfo.loadDagTransferUser();
-            parallelOk =
-                    ParallelOk.load(
-                            serialDagUserInfo.getContractAddr(),
-                            client,
-                            client.getCryptoSuite().getCryptoKeyPair());
-            System.out.println(
-                    "====== ParallelOk trans, load success, address: "
-                            + parallelOk.getContractAddress());
-            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
+            //            serialDagUserInfo.loadDagTransferUser();
+            //            parallelOk =
+            //                    ParallelOk.load(
+            //                            serialDagUserInfo.getContractAddr(),
+            //                            client,
+            //                            client.getCryptoSuite().getCryptoKeyPair());
+            //            System.out.println(
+            //                    "====== ParallelOk trans, load success, address: "
+            //                            + parallelOk.getContractAddress());
+            //            parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo,
+            // threadPoolService);
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
             //            // 获取交易之后的每个用户的余额数据
@@ -151,7 +152,6 @@ public class ParallelOkPerfNew {
             //            // 九、正确性比对
             //            verify();
             // 十、性能评估
-
 
         } catch (Exception e) {
             System.out.println("ParallelOkPerf test failed, error info: " + e.getMessage());

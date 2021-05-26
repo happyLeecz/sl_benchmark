@@ -52,6 +52,7 @@ public class ParallelOkCallback extends TransactionCallback {
             String callbackType,
             Integer index) {
         this.collector = collector;
+        // 用户列表
         this.dagUserInfo = dagUserInfo;
         this.callbackType = callbackType;
         this.index = index;
