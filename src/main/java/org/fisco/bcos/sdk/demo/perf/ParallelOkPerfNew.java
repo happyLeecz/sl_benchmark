@@ -139,6 +139,7 @@ public class ParallelOkPerfNew {
 
     /**
      * 串行结果和并行结果 进行正确性检验
+     *
      * @throws InterruptedException
      */
     public static void verify() throws InterruptedException {

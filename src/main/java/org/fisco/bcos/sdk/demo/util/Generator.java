@@ -36,7 +36,7 @@ public class Generator {
             groups = 0;
         }
         // 当组数为 0 但冲突率不为 0 时，将组数置为 1，或者冲突的测试用例数不能构成 [groups] 组时将组数置为 1
-        if(!ifEnoughForPreGroup(total, conflictRate, groups)) {
+        if (!ifEnoughForPreGroup(total, conflictRate, groups)) {
             groups = 1;
         }
         // 默认最后一组为非冲突测试用例
@@ -50,8 +50,7 @@ public class Generator {
     }
 
     private static boolean ifEnoughForPreGroup(int total, Integer conflictRate, Integer groups) {
-        if(groups == 0 && conflictRate == 0)
-            return true;
+        if (groups == 0 && conflictRate == 0) return true;
         return groups != 0 && (total * conflictRate / 100) > groups;
     }
 
@@ -77,7 +76,10 @@ public class Generator {
         try (BufferedWriter t = new BufferedWriter(new FileWriter(transactions));
                 BufferedWriter tbg = new BufferedWriter(new FileWriter(transactionsByGroup))) {
             for (int i = 0; i < trans.length; i++) {
-                tbg.write("=========================== group " + (i + 1) + "===========================\n");
+                tbg.write(
+                        "=========================== group "
+                                + (i + 1)
+                                + "===========================\n");
                 for (int j = 0; j < trans[i].length; j++) {
                     int from = trans[i][j][0];
                     int to = trans[i][j][1];
@@ -135,10 +137,12 @@ public class Generator {
      * @param totalOfConflictTestCasesPerGroup 该组的冲突交易总量
      * @return 该组的冲突交易数组
      */
-    public static int[][] generateConflictTransactionTestCasesPerGroup(int totalOfConflictTestCasesPerGroup) {
+    public static int[][] generateConflictTransactionTestCasesPerGroup(
+            int totalOfConflictTestCasesPerGroup) {
         // a, b, c 为根据等差数列求和公式构造的一元二次方程参数，设层级为 n，Sn 为到第 n 层的累加和, d 为公差，Sn = n * a1 + n * (n - 1) * d
         // / 2
-        // 在这里就为 Sn = n + n * (n - 1) / 2， 这里的 Sn 即为 函数参数 totalOfConflictTestCasesPerGroup，则一元二次方程为 n * n + n - 2 * totalOfConflictTestCasesPerGroup = 0
+        // 在这里就为 Sn = n + n * (n - 1) / 2， 这里的 Sn 即为 函数参数 totalOfConflictTestCasesPerGroup，则一元二次方程为
+        // n * n + n - 2 * totalOfConflictTestCasesPerGroup = 0
         // 其中 a = 1, b = 1, c = -2 * totalOfConflictTestCasesPerGroup
         int a = 1, b = 1, c = -2 * totalOfConflictTestCasesPerGroup;
         // 根据求根公式求出正数根也就是需要构造的层数，向上取整
@@ -151,7 +155,8 @@ public class Generator {
         System.out.println(layers);
         // 求出需要在最上面一层除去的多余的交易数
         if (Math.ceil(res) != res) {
-            removedItemsOnFirstLayer = (layers * layers + layers) / 2 - totalOfConflictTestCasesPerGroup;
+            removedItemsOnFirstLayer =
+                    (layers * layers + layers) / 2 - totalOfConflictTestCasesPerGroup;
         }
         // 交易测试用例中间结果的存储数组，第一维代表哪一层，第二维代表该层哪个交易，第三维代表该交易的信息
         int[][] conflictTransactionContainer = new int[layers][2];
@@ -167,7 +172,7 @@ public class Generator {
         for (int i = 0; i < layers - removedItemsOnFirstLayer; i++) {
             conflictTransactions[idx][0] = conflictTransactionContainer[i][0];
             conflictTransactions[idx][1] = conflictTransactionContainer[i][1];
-            idx ++;
+            idx++;
         }
         // 生成剩余层级的交易信息
         for (int i = layers - 1; i >= 1; i--) {
@@ -175,7 +180,7 @@ public class Generator {
                 conflictTransactionContainer[j][1] = conflictTransactionContainer[j + 1][1];
                 conflictTransactions[idx][0] = conflictTransactionContainer[j][0];
                 conflictTransactions[idx][1] = conflictTransactionContainer[j][1];
-                idx ++;
+                idx++;
             }
         }
         for (int i = 0; i < totalOfConflictTestCasesPerGroup; i++)
