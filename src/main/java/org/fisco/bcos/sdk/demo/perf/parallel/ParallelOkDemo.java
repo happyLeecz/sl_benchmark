@@ -116,8 +116,6 @@ public class ParallelOkDemo {
     public void userAdd(BigInteger userCount, BigInteger qps, long currentSeconds)
             throws InterruptedException, IOException {
 
-        System.out.println(
-                "================================ add users ================================");
         System.out.println("Start UserAdd test, count " + userCount);
         // 已经发送的交易数量
         AtomicInteger sended = new AtomicInteger(0);
@@ -134,7 +132,6 @@ public class ParallelOkDemo {
         long startTime = System.currentTimeMillis();
         // 为收集器设置统计开始的时间
         collector.setStartTimestamp(startTime);
-        System.out.println("====================== start time" + startTime);
 
         // 每次循环选用一个线程，发送一个交易，以生成一个用户
         for (Integer i = 0; i < userCount.intValue(); i++) {
@@ -223,8 +220,6 @@ public class ParallelOkDemo {
         }
         // 保存合约地址
         dagUserInfo.setContractAddr(parallelOk.getContractAddress());
-        System.out.println(
-                "================================ add users ================================\n");
     }
 
     /**
@@ -238,8 +233,6 @@ public class ParallelOkDemo {
      */
     public void userTransfer(BigInteger count, BigInteger qps, int[][][] transactions)
             throws InterruptedException, IOException {
-        System.out.println(
-                "================================ transfer ================================");
         // 已经发送的交易的数量
         AtomicInteger sended = new AtomicInteger(0);
         // 发送失败的交易数
@@ -364,8 +357,6 @@ public class ParallelOkDemo {
                     collector.getReceived().intValue(),
                     collector.getTotal());
         }
-        System.out.println(
-                "================================ transfer ================================\n");
     }
 
     /**
@@ -375,8 +366,6 @@ public class ParallelOkDemo {
      * @throws InterruptedException
      */
     public void queryAccount(BigInteger qps) throws InterruptedException {
-        System.out.println(
-                "================================ queryAccount ================================");
         // qps速率控制器
         RateLimiter rateLimiter = RateLimiter.create(qps.intValue());
         // 已经查询成功的数量
@@ -432,7 +421,5 @@ public class ParallelOkDemo {
         while (querySuccess.intValue() < userSize) {
             Thread.sleep(50);
         }
-        System.out.println(
-                "================================ queryAccount ================================\n");
     }
 }

@@ -97,16 +97,25 @@ public class ParallelOkPerfNew {
             // 三、串行生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, serialDagUserInfo, threadPoolService);
             System.out.println("Total number of users to be created:  " + Generator.getGi());
+            System.out.println("================================ serial add users ================================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
-
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("================================ serial add users ================================\n");
             // 四、串行转账
+            System.out.println("================================= serial transfer ================================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
-
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("================================= serial transfer ================================\n");
             // 五、获取交易之后的每个用户的余额数据
+            System.out.println("=============================== serial query account =============================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
-
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("=============================== serial query account =============================\n");
             // ******************************************************
             // 六、部署合约
             parallelOk = ParallelOk.deploy(client, client.getCryptoSuite().getCryptoKeyPair());
@@ -116,19 +125,33 @@ public class ParallelOkPerfNew {
 
             // 八、并行生成用户
             parallelOkDemo = new ParallelOkDemo(parallelOk, parallelDagUserInfo, threadPoolService);
+            System.out.println("=============================== parallel add users ===============================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.userAdd(
                     BigInteger.valueOf(Generator.getGi()), BigInteger.valueOf(qps), currentSeconds);
-
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("=============================== parallel add users ===============================\n");
             // 九、并行转账
+            System.out.println("================================ parallel transfer ===============================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.userTransfer(
                     BigInteger.valueOf(total), BigInteger.valueOf(qps), tansactions);
-
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("================================ parallel transfer ===============================\n");
             // 十、获取交易之后的每个用户的余额数据
+            System.out.println("============================== parallel query account ============================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             parallelOkDemo.queryAccount(BigInteger.valueOf(qps));
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("============================== parallel query account ============================\n");
 
             // ******************************************************
             // 十一、正确性比对
+            System.out.println("====================================== verify ====================================");
+            System.out.println("-------------------------------------- START -------------------------------------");
             verify();
+            System.out.println("--------------------------------------- END --------------------------------------");
+            System.out.println("====================================== verify ====================================\n");
             // 十二、性能评估
 
         } catch (Exception e) {
