@@ -37,9 +37,9 @@ public class ParallelOkPerfNew {
         System.out.println(" Usage:");
         System.out.println("=========== test ===========");
         System.out.println(
-                "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew [groupID] [total] [conflictRate] [groups] [qps].");
+                "\t java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew [chainType] [groupID] [total] [conflictRate] [groups] [qps].");
         System.out.println(
-                "\t eg. java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew 1 50000 10 2 4000");
+                "\t eg. java -cp 'conf/:lib/*:apps/*' org.fisco.bcos.sdk.demo.perf.ParallelOkPerfNew fiscobcos 1 50000 10 2 4000");
     }
 
     public static void main(String[] args)
