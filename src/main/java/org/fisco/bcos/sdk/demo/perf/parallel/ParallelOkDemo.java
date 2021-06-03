@@ -252,100 +252,110 @@ public class ParallelOkDemo {
         collector.setStartTimestamp(startTime);
         // 为收集器设置要收集的交易总数
         collector.setTotal(count.intValue());
-
+        int groups = transactions.length;
+        int[] pos = new int[groups];
+        int i = 0;
         // transactions为3维数组，第1维是分组
-        for (Integer i = 0; i < transactions.length; i++) {
-            // 第2维是交易，第3维是交易双方
-            for (Integer j = 0; j < transactions[i].length; j++) {
-
-                // 是否能够发送
-                limiter.acquire();
-
-                // 转出者的下标
-                final int fromUserIndex = transactions[i][j][0];
-                // 收款者的下标
-                final int toUserIndex = transactions[i][j][1];
-
-                // 每笔交易都由一个线程发送
-                threadPoolService
-                        .getThreadPool()
-                        .execute(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-
-                                            // 转账的金额
-                                            BigInteger amount = BigInteger.valueOf(10);
-
-                                            // 设置回调
-                                            ParallelOkCallback callback =
-                                                    new ParallelOkCallback(
-                                                            collector,
-                                                            dagUserInfo,
-                                                            ParallelOkCallback.TRANS_CALLBACK,
-                                                            null);
-                                            callback.setTimeout(0);
-
-                                            // 转账者
-                                            DagTransferUser from =
-                                                    dagUserInfo.getDTU(fromUserIndex);
-                                            // 收款者
-                                            DagTransferUser to = dagUserInfo.getDTU(toUserIndex);
-
-                                            callback.setFromUser(from);
-                                            callback.setToUser(to);
-                                            callback.setAmount(amount);
-
-                                            // 记录开始发送的时间
-                                            callback.recordStartTime();
-
-                                            // 发送转账交易
-                                            parallelOk.transfer(
-                                                    from.getUser(), to.getUser(), amount, callback);
-
-                                            // 已经发送的交易数
-                                            int current = sended.incrementAndGet();
-
-                                            if (current >= division
-                                                    && ((current % division) == 0)) {
-                                                // 已经花费时间
-                                                long elapsed =
-                                                        System.currentTimeMillis() - startTime;
-                                                // 当前qps
-                                                double sendSpeed =
-                                                        current / ((double) elapsed / 1000);
-                                                System.out.println(
-                                                        "Already sent: "
-                                                                + current
-                                                                + "/"
-                                                                + count
-                                                                + " transactions"
-                                                                + ",QPS="
-                                                                + sendSpeed);
-                                            }
-                                        } catch (Exception e) {
-
-                                            logger.error(
-                                                    "call transfer failed, error info: {}",
-                                                    e.getMessage());
-
-                                            // 构造发送失败的交易收据
-                                            TransactionReceipt receipt = new TransactionReceipt();
-                                            // 设置交易发送失败的状态
-                                            receipt.setStatus("-1");
-                                            receipt.setMessage(
-                                                    "call transfer failed, error info: "
-                                                            + e.getMessage());
-                                            // 将该收据传入到性能收集器中
-                                            collector.onMessage(receipt, Long.valueOf(0));
-
-                                            // 发送失败的数量+1
-                                            sendFailed.incrementAndGet();
-                                        }
-                                    }
-                                });
+        while (true) {
+            if (sended.get() == count.intValue()) {
+                break;
             }
+            i %= groups;
+            // 第2维是交易，第3维是交易双方
+            //            for (Integer j = 0; j < transactions[i].length; j++) {
+            if (pos[i] == transactions[i].length) {
+                i++;
+                continue;
+            }
+
+            // 是否能够发送
+            limiter.acquire();
+
+            // 转出者的下标
+            final int fromUserIndex = transactions[i][pos[i]][0];
+            // 收款者的下标
+            final int toUserIndex = transactions[i][pos[i]][1];
+
+            final int intAmount = i + pos[i] + 13;
+            pos[i]++;
+            i++;
+            // 每笔交易都由一个线程发送
+            threadPoolService
+                    .getThreadPool()
+                    .execute(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+
+                                        // 转账的金额
+                                        BigInteger amount = BigInteger.valueOf(intAmount);
+
+                                        // 设置回调
+                                        ParallelOkCallback callback =
+                                                new ParallelOkCallback(
+                                                        collector,
+                                                        dagUserInfo,
+                                                        ParallelOkCallback.TRANS_CALLBACK,
+                                                        null);
+                                        callback.setTimeout(0);
+
+                                        // 转账者
+                                        DagTransferUser from = dagUserInfo.getDTU(fromUserIndex);
+                                        // 收款者
+                                        DagTransferUser to = dagUserInfo.getDTU(toUserIndex);
+
+                                        callback.setFromUser(from);
+                                        callback.setToUser(to);
+                                        callback.setAmount(amount);
+
+                                        // 记录开始发送的时间
+                                        callback.recordStartTime();
+
+                                        // 发送转账交易
+                                        parallelOk.transfer(
+                                                from.getUser(), to.getUser(), amount, callback);
+
+                                        // 已经发送的交易数
+                                        int current = sended.incrementAndGet();
+
+                                        if (current >= division && ((current % division) == 0)) {
+                                            // 已经花费时间
+                                            long elapsed = System.currentTimeMillis() - startTime;
+                                            // 当前qps
+                                            double sendSpeed = current / ((double) elapsed / 1000);
+                                            System.out.println(
+                                                    "Already sent: "
+                                                            + current
+                                                            + "/"
+                                                            + count
+                                                            + " transactions"
+                                                            + ",QPS="
+                                                            + sendSpeed);
+                                        }
+                                    } catch (Exception e) {
+
+                                        logger.error(
+                                                "call transfer failed, error info: {}",
+                                                e.getMessage());
+
+                                        // 构造发送失败的交易收据
+                                        TransactionReceipt receipt = new TransactionReceipt();
+                                        // 设置交易发送失败的状态
+                                        receipt.setStatus("-1");
+                                        receipt.setMessage(
+                                                "call transfer failed, error info: "
+                                                        + e.getMessage());
+                                        // 将该收据传入到性能收集器中
+                                        collector.onMessage(receipt, Long.valueOf(0));
+
+                                        // 发送失败的数量+1
+                                        sendFailed.incrementAndGet();
+                                    }
+                                }
+                            });
+            //            }
+
         }
 
         // 如果性能收集器没有收到足够多的交易，则打印日志
